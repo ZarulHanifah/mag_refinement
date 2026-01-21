@@ -1,0 +1,4 @@
+mag_id	parent_id	fasta_path	abundance_path	summary_name
+C1A3_A_metabat.872	NA	./tests/input_folder/dereplicated_genomes/C1A3_A_metabat.872.fasta	./tests/input_folder/mtbt_gen_depth/myloasm__C001_A3.tsv	C1A3_A_metabat.872
+Asg1	NA	./tests/input_folder/dereplicated_genomes/C1A3_M_semibin.175.fasta	./tests/input_folder/mtbt_gen_depth/myloasm__C001_A3.tsv	C1A3_M_semibin.175
+Asg1_flye	Asg1	/path/to/some/new/reassembly/Asg1_flye.fasta	./tests/input_folder/mtbt_gen_depth/myloasm__C001_A3.tsv	Asg1_flye

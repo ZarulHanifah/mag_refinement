@@ -4,4 +4,7 @@ models.mmd
 models.preview.html
 pytest.ini
 .coverage
+results/
+temp_path
+input_folder/
 

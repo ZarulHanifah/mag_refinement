@@ -1,0 +1,20 @@
+__default__:
+    jobname     : "{rule}.{wildcards}"
+    output      : "logs/cluster/{rule}.{wildcards}.out"
+    error       : "logs/cluster/{rule}.{wildcards}.err"
+    #etc         : "--mem=10G -p cpu1,cpu1.largec,cpu1.largec.28d,cpu1.largem,cpu1.medm,cpu2,cpu2.largec,cpu2.largem"
+    etc         : "--mem=10G -p highprio --exclude=mum-hpc2-gpu[1-6]"
+    #herro:
+    #    threads     : 8
+    #    etc         : "--mem=400G -p highprio --exclude=mum-hpc2-gpu[1-6] --gres=gpu:a100:1"
+    #flye_herro:
+    #    threads     : 8
+    #    etc         : "--mem=200G -p highprio --exclude=mum-hpc2-gpu[1-6]"
+flye_fq:
+    threads     : 8
+    #etc         : "--mem=200G -p cpu1,cpu1.largec,cpu1.largec.28d,cpu1.largem,cpu1.medm,cpu2,cpu2.largec,cpu2.largem"
+    etc         : "--mem=200G -p highprio --exclude=mum-hpc2-gpu[1-6]"
+hifiasm_fq:
+    threads     : 4
+    #etc         : "--mem=200G -p cpu1,cpu1.largec,cpu1.largec.28d,cpu1.largem,cpu1.medm,cpu2,cpu2.largec,cpu2.largem"
+    etc         : "--mem=240G -p highprio --exclude=mum-hpc2-gpu[1-6]"

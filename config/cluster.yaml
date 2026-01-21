@@ -1,0 +1,25 @@
+__default__:
+  jobname : "{rule}.{wildcards}"
+  output  : "logs/cluster/{rule}/{wildcards}.out"
+  error   : "logs/cluster/{rule}/{wildcards}.err"
+  threads : 1
+  etc     : ""
+chunk_osample:
+  threads : 1
+minimap2:
+  threads : 8
+minimap2_index:
+  threads : 8
+minimap2_mini:
+  threads : 2
+minimap2_fq:
+  threads : 2
+flye_fq:
+  threads : 8
+  etc     : " --mem=80G "
+myloasm_fq:
+  threads : 8
+  etc     : " --mem=80G "
+hifiasm_fq:
+  threads : 4
+  etc     : " --mem=40G "

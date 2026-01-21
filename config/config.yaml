@@ -1,0 +1,70 @@
+###
+project:
+  ALL
+njobs: 100
+cluster_config:
+  ./config/cluster.yaml
+summary_path:
+  ./input_folder/summary.tsv
+mag_dir:
+  ./input_folder/dereplicated_genomes/
+abund_dir:
+  ./input_folder/mtbt_gen_depth/
+temp_path:
+  /fs04/scratch2/ps45/Zarul/temp_mag_refinement/
+results_path:
+  results
+herro_model:
+  src/model_R10_v0.1.pt
+checkm2_db:
+  input_folder/uniref100.KO.1.dmnd
+email_address:
+  muhammad.zarulhanifah@monash.edu
+dereplicated_genomes_dir:
+    input_folder/dereplicated_genomes
+dereplicated_genome_path:
+    input_folder/dereplicated_genomes/{mag}.fasta
+pident: 95
+coverage: 80
+dorado7:
+  C001_A3:
+    input_folder/dorado7/C001_A3/
+  C001_C3:
+    input_folder/dorado7/C001_C3/
+  C001_E5:
+    input_folder/dorado7/C001_E5/
+  C001_H4:
+    input_folder/dorado7/C001_H4/
+  C001_J2:
+    input_folder/dorado7/C001_J2/
+  C002_A3:
+    input_folder/dorado7/C002_A3/
+  C002_B2:
+    input_folder/dorado7/C002_B2/
+  C002_C1:
+    input_folder/dorado7/C002_C1/
+  C002_D1:
+    input_folder/dorado7/C002_D1/
+  C002_E1:
+    input_folder/dorado7/C002_E1/
+  C003_A1:
+    input_folder/dorado7/C003_A1/
+  C003_B3:
+    input_folder/dorado7/C003_B3/
+  C003_C4:
+    input_folder/dorado7/C003_C4/
+  C003_D5:
+    input_folder/dorado7/C003_D5/
+  C003_E3:
+    input_folder/dorado7/C003_E3/
+  C007_A1:
+    input_folder/dorado7/C007_A1/
+  C007_B4:
+    input_folder/dorado7/C007_B4/
+  C007_C5:
+    input_folder/dorado7/C007_C5/
+  C007_E5:
+    input_folder/dorado7/C007_E5/
+  C007_F4:
+    input_folder/dorado7/C007_F4/
+...

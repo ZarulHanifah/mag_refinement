@@ -4,7 +4,11 @@ models.mmd
 models.preview.html
 pytest.ini
 .coverage
-results/
-temp_path
-input_folder/
 
+results/
+temp_path/
+input_folder/
+.snakemake/
+logs/
+results/
+*.log

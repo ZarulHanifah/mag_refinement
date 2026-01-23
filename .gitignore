@@ -16,3 +16,5 @@ results/
 
 old_stuff/
 config_snakefile.yaml
+
+src/model_R10_v0.1.pt

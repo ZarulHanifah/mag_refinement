@@ -6,9 +6,13 @@ pytest.ini
 .coverage
 
 results/
+temp_path
 temp_path/
 input_folder/
 .snakemake/
 logs/
 results/
 *.log
+
+old_stuff/
+config_snakefile.yaml

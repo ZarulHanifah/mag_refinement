@@ -1,49 +1,28 @@
-rule checkm2_fq:
+rule checkm2_original:
     input:
-        fasta = rules.flye_fq.output.assem,
-        db = config["checkm2_db"]
+        mag = config["dereplicated_genome_path"],
+        db = checkm2_db
     output:
-        tmp = temp(os.path.join(results_path, ".tmp/{mag}/{mag}.fasta")),
-        report = os.path.join(results_path, "checkm2/flye_fq/{mag}/storage/quality_report.tsv")
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/original/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/original/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/original/{mag}/quality_report.tsv")
     conda: "checkm2_"
     threads: 2
-    log: os.path.join(results_path, "log/checkm2/flye_fq/{mag}.log")
-    message: "Running checkm2 for genome {wildcards.mag}"
+    log: os.path.join(results_path, "log/checkm2/original/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: original"
     shell:
         """
-        cp {input.fasta} {output.tmp}
+        cp {input.mag} {output.tmp}
         input_genome=$(find {output.tmp} | grep "fasta")
-        
+
         outfolder=$(dirname {output.report})
 
-        checkm2 predict --threads {threads} \
+        checkm2 predict --force \
+         --threads {threads} \
          --input $input_genome \
          --database_path {input.db} \
          --output-directory $outfolder &> {log}
         """
-
-# rule checkm2_herro:
-#     input:
-#         fasta = rules.flye_herro.output.assem,
-#         db = config["checkm2_db"]
-#     output:
-#         tmp = temp(os.path.join(results_path, ".tmp/{mag}/{mag}.fasta")),
-#         report = os.path.join(results_path, "checkm2/flye_herro/{mag}/storage/quality_report.tsv")
-#     conda: "checkm2_"
-#     threads: 2
-#     log:
-#         os.path.join(results_path, "log/checkm2/flye_herro/{mag}.log")
-#     message: "Running checkm2 for genome {wildcards.mag}"
-#     shell:
-#         """
-#         cp {input.fasta} {output.tmp}
-#         input_genome=$(find {output.tmp} | grep "fasta")
-#         
-#         outfolder=$(dirname {output.report})
-# 
-#         checkm2 predict --threads {threads} \
-#          --input $input_genome \
-#          --database_path {input.db} \
-#          --output-directory $outfolder &> {log}
-#         """
 

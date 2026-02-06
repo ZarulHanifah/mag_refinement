@@ -1,10 +1,10 @@
 def get_bam_osample(wildcards):
     fastqs = get_fastq_chunks(wildcards.osample)
-    return expand(rules.minimap2_mini.output.bam, mag=wildcards.mag, osample=wildcards.osample, fastq=fastqs)
+    return expand(rules.minimap2_fq.output.bam, mag=wildcards.mag, osample=wildcards.osample, fastq=fastqs)
 
 def get_bai_osample(wildcards):
     fastqs = get_fastq_chunks(wildcards.osample)
-    return expand(rules.minimap2_mini.output.bai, mag=wildcards.mag, osample=wildcards.osample, fastq=fastqs)
+    return expand(rules.minimap2_fq.output.bai, mag=wildcards.mag, osample=wildcards.osample, fastq=fastqs)
 
 rule minimap2:
     input:
@@ -14,12 +14,11 @@ rule minimap2:
         bam = os.path.join(results_path, "minimap2/{osample}/{mag}.bam"),
         bai = os.path.join(results_path, "minimap2/{osample}/{mag}.bam.bai"),
         stat = os.path.join(results_path, "minimap2/{osample}/{mag}.stat"),
-    conda: "minimap2_"
     threads: 8
     log: os.path.join(results_path, "log/minimap2/{osample}/{mag}.log")
     shell:
         """
-        # module load medaka/1.12.0
+        module load minimap2 samtools
 
         lst=$(echo {output.bam} | sed "s/bam/list/")
         echo > $lst
@@ -96,7 +95,8 @@ rule cm:
         """
 
 def input_merge_metabat2_tables(wildcards):
-    return expand(rules.cm.output.tmp, osample=samples_list, mag=wildcards.mag)
+    return expand(rules.cm.output.tmp, osample=get_samples_for_mag(wildcards), mag=wildcards.mag)
+    # return expand(rules.cm.output.tmp, osample=samples_list, mag=wildcards.mag)
 
 rule merge_metabat2_tables:
     input:
@@ -122,8 +122,7 @@ rule magpurify2_coverage:
         real = os.path.join(results_path, "magpurify2_coverage/{mag}/scores/coverage_scores.tsv")
     log:
         os.path.join(results_path, "log/magpurify2_coverage/{mag}.log")
-    conda:
-        "magpurify2"
+    conda: "magpurify2_"
     params:
         min_identity = 0.95
     retries: 3
@@ -132,8 +131,12 @@ rule magpurify2_coverage:
         outdir=$(dirname $(dirname {output.real}))
         rm -rf $outdir
 
-        cat {input.coverage} | transpose_table.py | grep -v "var" | grep -v "contigLen" | grep -v "totalAvgDepth" | \
-         transpose_table.py > {output.transform}
+        cat {input.coverage} | \
+         ./src/transpose_table.py | \
+         grep -v "var" | \
+         grep -v "contigLen" | \
+         grep -v "totalAvgDepth" | \
+         ./src/transpose_table.py > {output.transform}
 
         magpurify2 coverage --coverage_file {output.transform} \
          --min_identity {params.min_identity} \

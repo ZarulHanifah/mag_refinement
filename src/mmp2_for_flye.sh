@@ -99,7 +99,10 @@ awk -v pident="$PIDENT" -v coverage="$COVERAGE" -v logfile="$LOGFILE" -v end_reg
 
         read_len = length($10);  # Sequence length
 
-        if (match_len == 0 || read_len <= 0 || !nm || total_len == 0) {
+        # if (match_len == 0 || read_len <= 0 || !nm || total_len == 0) {
+	
+	# Removed !nm to accept perfect alignments
+        if (match_len == 0 || read_len <= 0 || total_len == 0) {
             next;
         }
 
@@ -117,11 +120,14 @@ awk -v pident="$PIDENT" -v coverage="$COVERAGE" -v logfile="$LOGFILE" -v end_reg
             print $0;
         }
     }'  |
-samtools sort -@ "$THREADS" -T $TMPDIR 2>> $LOGFILE | \
-samtools view -@ "$THREADS" | cut -f1 | sort -u > $IDS_OUTPUT
+samtools sort -@ $THREADS -T $TMPDIR 2>> $LOGFILE | \
+tee $BAM_OUTPUT | \
+samtools view -@ $THREADS | cut -f1 | sort -u > $IDS_OUTPUT
+
+samtools index -@ $THREADS $BAM_OUTPUT $BAM_INDEX
 
 seqtk subseq $READS $IDS_OUTPUT > $FASTQ_OUTPUT
 
-echo "Filtered BAM saved to $BAM_OUTPUT" >> "$LOGFILE"
-echo "BAM index saved to $BAM_INDEX" >> "$LOGFILE"
-echo "Filtered FASTQ saved to $FASTQ_OUTPUT" >> "$LOGFILE"
+echo "Filtered BAM saved to $BAM_OUTPUT" >> $LOGFILE
+echo "BAM index saved to $BAM_INDEX" >> $LOGFILE
+echo "Filtered FASTQ saved to $FASTQ_OUTPUT" >> $LOGFILE

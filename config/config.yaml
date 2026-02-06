@@ -13,7 +13,7 @@ abund_dir:
 temp_path:
   /fs04/scratch2/ps45/Zarul/temp_mag_refinement/
 results_path:
-  results
+  /fs04/scratch2/ie79/Zarul/status_nanopore/ALL/mag_refinement/results
 herro_model:
   src/model_R10_v0.1.pt
 checkm2_db:

@@ -36,33 +36,33 @@ rule get_fastq_chunk:
         """ 
 
 # Convert minimap2_mini from a checkpoint to a rule
-rule minimap2_mini:
-    input:
-        reads = rules.get_fastq_chunk.output,
-        idx = rules.minimap2_index.output
-    output:
-        bam = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.bam")),
-        bai = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.bam.bai")),
-        fq = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.fq"))
-    log: os.path.join(results_path, "log/minimap2_mini/{mag}/{osample}/{fastq}.log")
-    threads: 2
-    params:
-        pident = config["pident"],
-        coverage = config["coverage"]
-    shell:
-        """ 
-        module load minimap2/2.28
-        module load samtools
-    
-        PREFIX=$(echo {output.fq} | sed "s/\.fq//")
-
-        tmpdir=$(dirname {output.fq})"_"{wildcards.fastq}"/"
-        mkdir -p $tmpdir
-
-        ./src/minimap2_stringent.sh -t {threads} -p {params.pident} -c {params.coverage} -r {input.idx} -i {input.reads} -o $PREFIX -b $tmpdir -l {log}
-
-        rm -rf $tmpdir
-        """ 
+# rule minimap2_mini:
+#     input:
+#         reads = rules.get_fastq_chunk.output,
+#         idx = rules.minimap2_index.output
+#     output:
+#         bam = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.bam")),
+#         bai = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.bam.bai")),
+#         fq = temp(os.path.join(temp_path, "minimap2_mini/{mag}/{osample}/{fastq}.fq"))
+#     log: os.path.join(results_path, "log/minimap2_mini/{mag}/{osample}/{fastq}.log")
+#     threads: 2
+#     params:
+#         pident = config["pident"],
+#         coverage = config["coverage"]
+#     shell:
+#         """ 
+#         module load minimap2/2.28
+#         module load samtools
+#
+#         PREFIX=$(echo {output.fq} | sed "s/\.fq//")
+#
+#         tmpdir=$(dirname {output.fq})"_"{wildcards.fastq}"/"
+#         mkdir -p $tmpdir
+#
+#         ./src/minimap2_stringent.sh -t {threads} -p {params.pident} -c {params.coverage} -r {input.idx} -i {input.reads} -o $PREFIX -b $tmpdir -l {log}
+#
+#         rm -rf $tmpdir
+#         """ 
 
 rule minimap2_fq:
     input:
@@ -70,7 +70,9 @@ rule minimap2_fq:
         idx = rules.minimap2_index.output
     output:
         fq = os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.fq"),
-        ids = temp(os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.ids"))
+        ids = temp(os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.ids")),
+        bam = temp(os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.bam")),
+        bai = temp(os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.bam.bai")),
     log: os.path.join(results_path, "log/minimap2_fq/{mag}/{osample}/{fastq}.log")
     conda: "seqkit_"
     threads: 2
@@ -83,7 +85,7 @@ rule minimap2_fq:
         module load minimap2/2.28
         module load samtools
         module load seqtk
-    
+
         PREFIX=$(echo {output.fq} | sed "s/\.fq//")
 
         tmpdir=$(dirname {output.fq})"_"{wildcards.fastq}"/"
@@ -98,7 +100,7 @@ rule minimap2_fq:
          -i {input.reads} \
          -o $PREFIX \
          -b $tmpdir -l {log}
-        
+
         # cat $PREFIX"_core.fq" $PREFIX"_ends.fq" | seqkit rmdup  > {output.fq} 
         # cat $PREFIX"_core.fq" | seqkit rmdup  > {output.fq} 
 
@@ -124,7 +126,7 @@ rule minimap2_fq:
 #         preprocess_prefix=$(echo {output.preprocess} | sed "s/\.fastq.gz//")
 #         module load herro
 #         module load minimap2/2.24
-#         
+#
 #         rm -rf $(dirname {output.preprocess})
 #         src/preprocess.sh {input.fq} $preprocess_prefix {threads} 1
 # 

@@ -45,8 +45,6 @@ include: "rules/herro.smk"
 include: "rules/assembly.smk"
 include: "rules/coverm.smk"
 include: "rules/ntlink.smk"
-include: "rules/coverm.smk"
-include: "rules/ntlink.smk"
 include: "rules/checkm2.smk"
 
 wildcard_constraints:
@@ -57,4 +55,6 @@ rule all:
         expand(rules.flye_fq.output.assem, mag=mags),
         expand(rules.hifiasm_fq.output.assem, mag=mags),
         expand(rules.myloasm_fq.output.assem, mag=mags),
-        expand(rules.ntlink_prelim.output, mag=mags)
+        expand(rules.longstitch.output, mag=mags),
+        expand(rules.checkm2_original.output.report, mag=mags),
+        expand(rules.magpurify2_coverage.output, mag=mags)

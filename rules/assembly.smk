@@ -22,7 +22,7 @@ def get_fastq_chunks(osample):
 
 def get_all_fq(wildcards):
     """ 
-    Collect all fastq outputs from the minimap2_mini rule for a given mag.
+    Collect all fastq outputs from the minimap2_fq rule for a given mag.
     """ 
     fastqs = []
 
@@ -32,17 +32,17 @@ def get_all_fq(wildcards):
         fastq_chunks = get_fastq_chunks(osample)
         for fastq in fastq_chunks:
             # Dynamically retrieve outputs from the rule
-            fq_output = os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.fq").format(mag=wildcards.mag, osample=osample, fastq=fastq)
+            fq_output = os.path.join(temp_path, "minimap2_fq/{mag}/{osample}/{fastq}.fq").format(mag=wildcards.mag,
+                                                                                                 osample=osample,
+                                                                                                 fastq=fastq)
             fastqs.append(fq_output)
     return fastqs
-
-# temp(directory(os.path.join(temp_path, "minimap2_fq_collected/{mag}")))
 
 rule collect_minimap2_fq:
     input:
         lambda wildcards: get_all_fq(wildcards)
     output:
-        temp(os.path.join(temp_path, "minimap2_fq_collected/{mag}/all.fq"))
+        os.path.join(temp_path, "minimap2_fq_collected/{mag}/all.fq")
     shell:
         """
         # mkdir -p {output}
@@ -55,7 +55,15 @@ rule flye_fq:
     input:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        assem = os.path.join(results_path, "flye_fq/{mag}/assembly.fasta")
+        remove_list = temp([
+            directory(os.path.join(results_path, "flye_fq/{mag}/00-assembly/")),
+            directory(os.path.join(results_path, "flye_fq/{mag}/10-consensus/")),
+            directory(os.path.join(results_path, "flye_fq/{mag}/20-repeat/")),
+            directory(os.path.join(results_path, "flye_fq/{mag}/30-contigger/")),
+            directory(os.path.join(results_path, "flye_fq/{mag}/40-polishing/")),
+        ]),
+        assem_p = os.path.join(results_path, "flye_fq/{mag}/assembly.fasta"),
+        assem = os.path.join(results_path, "flye_fq/{mag}/{mag}.flye.fasta")
     log:
         os.path.join(results_path, "log/flye_fq/{mag}.log")
     conda: "flye_"
@@ -65,29 +73,41 @@ rule flye_fq:
         outdir=$(dirname {output.assem})
 
         flye --nano-hq {input.fq} --out-dir $outdir --threads {threads} --meta 2> {log}
+        ./src/mlFASTA2slFASTA.sh < {output.assem_p} > {output.assem}
         """
 
 rule hifiasm_fq:
     input:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        assem = os.path.join(results_path, "hifiasm_fq/{mag}/{mag}.p_ctg.gfa")
+        gfa = os.path.join(results_path, "hifiasm_fq/{mag}/{mag}.p_ctg.gfa"),
+        assem = os.path.join(results_path, "hifiasm_fq/{mag}/{mag}.hifiasm.fasta"),
     log:
         os.path.join(results_path, "log/hifiasm_fq/{mag}.log")
     conda: "hifiasm_"
     threads: 4
     shell:
         """
-        prefix=$(echo {output.assem}| sed "s/\.p_ctg\.gfa//")
+        prefix=$(echo {output.gfa}| sed "s/\.p_ctg\.gfa//")
 
         hifiasm --ont -o $prefix -t {threads} --primary --n-hap 1  {input.fq} 2> {log}
+        ./src/gfa_to_fasta.py --gfa {output.gfa} --output {output.assem}
         """
 
 rule myloasm_fq:
     input:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        assem = os.path.join(results_path, "myloasm_fq/{mag}/assembly_primary.fa")
+        remove_list = temp([
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/0-cleaning_and_unitigs/")),
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/1-light_resolve/")),
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/2-heavy_path_resolve/")),
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/3-mapping/")),
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/alternate_assemblies/")),
+            directory(os.path.join(results_path, "myloasm_fq/{mag}/binary_temp/")),
+        ]),
+        assem_p = os.path.join(results_path, "myloasm_fq/{mag}/assembly_primary.fa"),
+        assem = os.path.join(results_path, "myloasm_fq/{mag}/{mag}.myloasm.fasta"),
     conda: "myloasm_"
     log:
         os.path.join(results_path, "log/myloasm_fq/{mag}.log")
@@ -98,13 +118,15 @@ rule myloasm_fq:
         rm -rf $outdir
 
         myloasm {input.fq} --output-dir $outdir --threads {threads} --clean-dir &> {log}
+        ./src/mlFASTA2slFASTA.sh < {output.assem_p} > {output.assem}
         """
 
 rule wtdbg2_fq:
     input:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        assem = os.path.join(results_path, "wtdbg2_fq/{mag}/{mag}.ctg.gfa")
+        gfa = os.path.join(results_path, "wtdbg2_fq/{mag}/{mag}.ctg.gfa"),
+        assem = os.path.join(results_path, "wtdbg2_fq/{mag}/{mag}.wtdbg2.fasta")
     log:
         os.path.join(results_path, "log/wtdbg2_fq/{mag}.log")
     threads: 4
@@ -116,4 +138,5 @@ rule wtdbg2_fq:
         wtdbg2 -t {threads} -i {input.fq} -fo $prefix 2> {log}
         wtpoa-cns -t {threads} -i $prefix".ctg.lay.gz" -fo $prefix".raw.fa" 2> {log}
         ./src/wtdbg-dot2gfa.pl $prefix".ctg.dot.gz" {output} 2> {log}
+        ./src/gfa_to_fasta.py --gfa {output.gfa} --output {output.assem}
         """

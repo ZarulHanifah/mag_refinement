@@ -1,19 +1,20 @@
 # execute_workflow.py
+import argparse
+import subprocess
 import sys
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 from pathlib import Path
-import yaml
-import subprocess
-from typing import Optional, List
-import argparse
+from typing import List, Optional
 
 import snakemake
+import yaml
 from tqdm import tqdm
 
 # This allows the script to find your 'models.py' file in the 'src' directory.
-sys.path.append(str(Path(__file__).parent / "src"))
-from models import Mag, SessionManager
+sys.path.append(str(Path(__file__).parent / "magrefine"))
+from magrefine.models import Mag
+from magrefine.sessionmanager import SessionManager
 
 
 def get_mag_worker(mag_name: str, session: SessionManager) -> Mag:

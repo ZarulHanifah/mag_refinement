@@ -6,7 +6,7 @@ from pathlib import Path
 
 from snakemake.exceptions import WorkflowError
 
-sys.path.append(str(Path(".") / "src"))
+sys.path.append(str(Path(".") / "magrefine"))
 from models import Mag, SessionManager
 
 if not os.path.exists("logs/cluster"):

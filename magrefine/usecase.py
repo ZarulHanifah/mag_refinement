@@ -4,24 +4,26 @@ import sys
 print(os.getcwd())
 sys.path.append('./src/')
 
+import subprocess
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 from pathlib import Path
 from pprint import pprint
-from typing import Generator, Optional
-import subprocess
 from string import ascii_lowercase
+from typing import Generator, Optional
 
 from tqdm import tqdm
 
-from models import ContigID, Mag, SessionManager
+from magrefine.contigids import ContigID
+from magrefine.mags import Mag
+from magrefine.sessionmanager import SessionManager
 
 
 def is_mag_single_circular(mag: Mag) -> bool:
-    return len(mag.contigids) == 1 and mag.contigids[0].is_circular()
+    return len(mag.contigids) == 1 and getattr(mag.contigids[0], 'is_circular', False)
 
 def is_mag_multiple_contigs_but_got_circular_contig(mag: Mag) -> bool:
-    return len(mag.contigids) > 1 and  any([ c.is_circular() for c in mag.contigids ])
+    return len(mag.contigids) > 1 and any([getattr(c, 'is_circular', False) for c in mag.contigids])
 
 def get_mags_single_circular(mags: list[Mag]) -> Generator[Mag, None, None]:
     for mag in mags:
@@ -40,7 +42,7 @@ def get_mags_multiple_contigs_but_with_circular_contig(mags: list[Mag]) -> Gener
 
 def get_circular_contigs_from_mag(mag: Mag) -> Generator[ContigID, None, None]:
     for contig in mag.contigids:
-        if contig.is_circular():
+        if getattr(contig, 'is_circular', False):
             yield contig
 
 def split_ctg_fasta(mag: Mag):

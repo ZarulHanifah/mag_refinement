@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 # This allows the script to find your 'models.py' file in the 'src' directory.
 sys.path.append(str(Path(__file__).parent / "magrefine"))
-from magrefine.models import Mag
+from magrefine.mags import Mag
 from magrefine.sessionmanager import SessionManager
 
 

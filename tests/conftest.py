@@ -4,8 +4,13 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from models import (AbundanceDB, ContigID, FilesystemLocator, Mag,
-                    SessionManager, SummaryRepository)
+from magrefine.abundancedb import AbundanceDB
+from magrefine.mags import Mag
+from magrefine.sessionmanager import (FilesystemLocator, SessionManager,
+                                      SummaryRepository)
+
+# from models import (AbundanceDB, ContigID, FilesystemLocator, Mag,
+                    # SessionManager, SummaryRepository)
 
 
 @pytest.fixture(scope="session")
@@ -17,7 +22,7 @@ def temp_project(tmp_path_factory):
     - depth/abundance file
     """
     tmp_path = tmp_path_factory.mktemp("data")
-    sample_mag_name = "C1A3_A_metabat.872"
+    # sample_mag_name = "C1A3_A_metabat.872"
     sample_mag_names = ["C1A3_A_metabat.872", "C1A3_M_semibin.175"]
     mag_dir = tmp_path / "dereplicated_genomes"
     abund_dir = tmp_path / "depths"

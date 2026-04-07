@@ -4,7 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from .models import AbundanceDB, ContigID, Mag
+from magrefine.abundancedb import AbundanceDB
+from magrefine.contigids import ContigID
+from magrefine.mags import Mag
 
 
 class SummaryRepository:
@@ -91,7 +93,7 @@ class SessionManager:
         contig_ids = self._create_contig_ids(header_strings, abundance_data)
 
         # Create and return the final Mag object
-        return Mag(mag_name, mag_data, mag_fasta_path, contig_ids)
+        return Mag.from_summary_data(mag_name, mag_data, mag_fasta_path, contig_ids)
 
     def get_mags_by_query(self,
                           query_string: str,
@@ -131,7 +133,7 @@ class SessionManager:
             name = ContigID.parse_name_from_header(header)
             # If a contig was in the FASTA but not the abundance file, it gets an empty dict.
             abund_data = all_abund_data.get(name, {}) if name else {}
-            contigids.append(ContigID(header, abund_data))
+            contigids.append(ContigID.from_header(header, abund_data))
         return contigids
 
     def get_summary_index(self):

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -288,11 +290,32 @@ class RefinedMag(BaseMag):
         return self.compare_to(self.parent)
 
     @staticmethod
-    def read_checkm_df(mag_name, checkmqual: Path):
+    def read_checkm2_df(mag_name, checkmqual: Path):
         df = pd.read_csv(checkmqual, sep="\t", index_col=0)
         df = df.loc[[mag_name], :]
         df_dict =  df.to_dict(orient="index")
         return df_dict[mag_name]
+
+    @staticmethod
+    def read_checkm1_tsv(mag_name, checkmqual: Path):
+        df = pd.read_csv(checkmqual, header=None, sep="\t", index_col=0)
+        val = df.loc[mag_name, 1]
+        val = ast.literal_eval(val)
+
+        rename_val_keys = {
+            "Completeness": "Completeness",
+            "Contamination": "Contamination",
+            "Translation table": "Translation_Table_Used",
+            "Coding density": "Coding_Density",
+            "N50 (contigs)": "Contig_N50",
+            "Genome size": "Genome_Size",
+            "GC": "GC_Content",
+            "# predicted genes": "Total_Coding_Sequences",
+            "# contigs": "Total_Contigs",
+            "Longest contig": "Max_Contig_Length",
+        }
+
+        return { rename_val_keys[k]: val[k] for k in rename_val_keys.keys() }
 
     @staticmethod
     def extract_header_from_fasta_file(fasta_file: Path) -> Generator[str, Any, Any]:
@@ -308,16 +331,63 @@ class RefinedMag(BaseMag):
             for contig_header in cls.extract_header_from_fasta_file(fasta_file)
         ]
 
+    @staticmethod
+    def get_checkm1qualfile(folder: Path) -> Path:    # pyright: ignore
+        for root, folders, files, in os.walk(folder):
+            for filename in folders + files:
+                fn = os.path.join(root, filename)
+                if fn.endswith(f"{folder}/storage/bin_stats_ext.tsv"):
+                    return Path(fn)
+
+    @staticmethod
+    def get_checkm2qualfile(folder: Path) -> Path:    # pyright: ignore
+        for root, folders, files, in os.walk(folder):
+            for filename in folders + files:
+                fn = os.path.join(root, filename)
+                if fn.endswith(f"{folder}/quality_report.tsv"):
+                    return Path(fn)
+
     @classmethod
-    def from_checkmqual(cls,
+    def from_checkm2qual(cls,
                         mag_name: str,
                         _fp: Path,
-                        checkmqual: Path,
+                        checkmqual: Path,    # can be the quality_report.tsv or even the folder containing the file
                         parent: Optional[BaseMag] = None) -> RefinedMag:
-        checkm_dict = RefinedMag.read_checkm_df(mag_name, checkmqual)
-        # how checkm_dict looks like:
-        # {'Completeness': 77.4, 'Contamination': 7.54, 'Completeness_Model_Used': 'Gradient Boost (General Model)', 'T ranslation_Table_Used': 11, 'Coding_Density': 0.815, 'Contig_N50': 31122, 'Average_Gene_Length': 218.8590924599113, 'Genome_Size': 23 47852, 'GC_Content': 0.47, 'Total_Coding_Sequences': 2931, 'Total_Contigs': 145, 'Max_Contig_Length': 154524, 'Additional_Notes': nan }
+        if checkmqual.is_file():
+            _checkmqual = checkmqual
+        elif checkmqual.is_dir():
+            _checkmqual = cls.get_checkm2qualfile(checkmqual) 
+        else:
+            raise TypeError(f"What is {checkmqual}?")
 
+        checkm_dict = cls.read_checkm2_df(mag_name, _checkmqual)
+        # how checkm_dict looks like:
+        # {'Completeness': 77.4, 'Contamination': 7.54, 'Completeness_Model_Used': 'Gradient Boost (General Model)', 'Translation_Table_Used': 11, 'Coding_Density': 0.815, 'Contig_N50': 31122, 'Average_Gene_Length': 218.8590924599113, 'Genome_Size': 23 47852, 'GC_Content': 0.47, 'Total_Coding_Sequences': 2931, 'Total_Contigs': 145, 'Max_Contig_Length': 154524, 'Additional_Notes': nan }
+
+        contigids = RefinedMag.get_mylocontigid_from_fasta_file(_fp)
+        return cls(
+            mag_name,
+            _fp,
+            contigids,
+            checkm_dict["Completeness"],
+            checkm_dict["Contamination"],
+            parent
+        )
+
+    @classmethod
+    def from_checkm1qual(cls,
+                        mag_name: str,
+                        _fp: Path,
+                        checkmqual: Path,    # can be the quality_report.tsv or even the folder containing the file
+                        parent: Optional[BaseMag] = None) -> RefinedMag:
+        if checkmqual.is_file():
+            _checkmqual = checkmqual
+        elif checkmqual.is_dir():
+            _checkmqual = cls.get_checkm1qualfile(checkmqual) 
+        else:
+            raise TypeError(f"What is {checkmqual}?")
+
+        checkm_dict = cls.read_checkm1_tsv(mag_name, _checkmqual)
         contigids = RefinedMag.get_mylocontigid_from_fasta_file(_fp)
         return cls(
             mag_name,

@@ -59,17 +59,42 @@ def test_refinedmag_initialization(mock_session_manager: SessionManager):
     assert refined_mag.total_contigs == 2
     assert refined_mag.parent is original_mag
 
-def test_refinedmag_init_from_fasta_and_checkmqual():
+def test_refinedmag_init_from_fasta_and_checkm2qualdir():
+    mag_name = "C1E5_M_metabat.1297"
+
+    _fp = Path("./tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
+    checkmqualdir = Path("./tests/input_folder/checkm2/C1E5_M_metabat.1297")
+
+    mag = RefinedMag.from_checkm2qual(mag_name, _fp, checkmqualdir, parent=None)
+
+    assert mag.completeness == 77.4
+    assert mag.contamination == 7.54
+    assert mag.total_contigs == 145
+    assert mag.parent is None 
+
+def test_refinedmag_init_from_fasta_and_checkm2qual():
     mag_name = "C1E5_M_metabat.1297"
 
     _fp = Path("./tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
     checkmqual = Path("./tests/input_folder/checkm2/C1E5_M_metabat.1297/quality_report.tsv")
 
-    mag = RefinedMag.from_checkmqual(mag_name, _fp, checkmqual, parent=None)
+    mag = RefinedMag.from_checkm2qual(mag_name, _fp, checkmqual, parent=None)
 
     assert mag.completeness == 77.4
     assert mag.contamination == 7.54
     assert mag.total_contigs == 145
+    assert mag.parent is None 
+
+def test_refinedmag_init_from_fasta_and_checkm1qual(mock_checkm1_file):
+    mag_name = "C1E5_M_metabat.1297"
+
+    _fp = Path("./tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
+
+    mag = RefinedMag.from_checkm1qual(mag_name, _fp, mock_checkm1_file, parent=None)
+
+    assert mag.completeness == pytest.approx(78.43, abs=0.1)
+    assert mag.contamination == pytest.approx(11.21, abs=0.1)
+    assert mag.total_contigs == pytest.approx(145)
     assert mag.parent is None 
 
 

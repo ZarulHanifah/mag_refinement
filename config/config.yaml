@@ -17,7 +17,12 @@ results_path:
 herro_model:
   src/model_R10_v0.1.pt
 checkm2_db:
-  input_folder/uniref100.KO.1.dmnd
+  /fs04/ps45/Zarul/db/checkm2_db/CheckM2_database/uniref100.KO.1.dmnd
+checkm1_db:
+  /fs04/ps45/Zarul/db/checkm_db
+uniref_db:
+  /fs03/pg32/db/uniref90_db/uni90.dmnd
+
 email_address:
   muhammad.zarulhanifah@monash.edu
 dereplicated_genomes_dir:

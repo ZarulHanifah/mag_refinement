@@ -40,7 +40,7 @@ def get_all_fq(wildcards):
 
 rule collect_minimap2_fq:
     input:
-        lambda wildcards: get_all_fq(wildcards)
+        lambda wildcards: ancient(get_all_fq(wildcards))
     output:
         os.path.join(temp_path, "minimap2_fq_collected/{mag}/all.fq")
     shell:

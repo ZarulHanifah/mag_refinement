@@ -8,6 +8,7 @@ pytest.ini
 results/
 temp_path
 temp_path/
+input_folder
 input_folder/
 .snakemake/
 logs/

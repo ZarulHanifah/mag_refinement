@@ -6,8 +6,8 @@ from pathlib import Path
 
 from snakemake.exceptions import WorkflowError
 
-sys.path.append(str(Path(".") / "magrefine"))
-from models import Mag, SessionManager
+from magrefine.mags import Mag
+from magrefine.sessionmanager import SessionManager
 
 if not os.path.exists("logs/cluster"):
     os.makedirs("logs/cluster")
@@ -29,9 +29,11 @@ temp_path       = config["temp_path"]
 samples_dorado  = config["dorado7"]
 samples_list    = sorted(list(samples_dorado.keys()))
 
+uniref_db       = config["uniref_db"]
+checkm1_db      = config["checkm1_db"]
+checkm2_db      = config["checkm2_db"]
+
 medaka_model    = "r1041_e82_400bps_sup_v5.0.0"
-uniref_db       = "/fs03/pg32/db/uniref90_db/uni90.dmnd"
-checkm2_db      = "/fs04/ps45/Zarul/db/checkm2_db/CheckM2_database/uniref100.KO.1.dmnd"
 
 # --- MODIFIED SECTION: MAG SELECTION LOGIC ---
 if "mags_to_process" in config:

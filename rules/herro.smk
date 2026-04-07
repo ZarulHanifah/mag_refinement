@@ -1,5 +1,5 @@
 rule minimap2_index:
-    input: config["dereplicated_genome_path"]
+    input: ancient(config["dereplicated_genome_path"])
     output: temp(os.path.join(temp_path, "minimap2_index/{mag}/{mag}.mmi"))
     log: os.path.join(results_path, "log/minimap2_index/{mag}.log")
     threads: 8

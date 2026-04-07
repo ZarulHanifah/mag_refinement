@@ -116,7 +116,7 @@ rule merge_metabat2_tables:
 rule magpurify2_coverage:
     input:
         coverage = rules.merge_metabat2_tables.output.check,
-        genome = config["dereplicated_genome_path"]
+        genome = ancient(config["dereplicated_genome_path"])
     output:
         transform = os.path.join(results_path, "coverm/merge_metabat2_tables/{mag}.transform"),
         real = os.path.join(results_path, "magpurify2_coverage/{mag}/scores/coverage_scores.tsv")

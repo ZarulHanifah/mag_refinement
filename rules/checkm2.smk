@@ -1,7 +1,7 @@
 rule checkm2_original:
     input:
-        mag = config["dereplicated_genome_path"],
-        db = checkm2_db
+        mag = ancient(config["dereplicated_genome_path"]),
+        db = ancient(checkm2_db)
     output:
         remove_list = temp([
             directory(os.path.join(results_path, "checkm2/original/{mag}/protein_files/"))
@@ -26,3 +26,28 @@ rule checkm2_original:
          --output-directory $outfolder &> {log}
         """
 
+rule checkm1_original:
+    input:
+        mag = ancient(config["dereplicated_genome_path"]),
+        db = ancient(checkm1_db)
+    output:
+        tmpdir = temp([ 
+            directory(os.path.join(results_path, "checkm1_tmp/original/{mag}"))
+        ]),
+        outdir = directory(os.path.join(results_path, "checkm1/original/{mag}")) 
+    log: os.path.join(results_path, "log/checkm1/original/{mag}.log")
+    conda: "checkm_"
+    threads: 2
+    shell:
+        """
+        export CHECKM_DATA_PATH={input.db}
+        module load hmmer
+
+        mkdir -p {output.tmpdir} ; cp {input.mag} {output.tmpdir}
+
+        outdir=$()
+
+        checkm lineage_wf -t {threads} \
+         -x fasta \
+         {output.tmpdir} {output.outdir} &> {log}
+        """

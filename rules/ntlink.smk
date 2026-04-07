@@ -1,6 +1,6 @@
 rule ntlink_prelim:
     input:
-        mag = config["dereplicated_genome_path"],
+        mag = ancient(config["dereplicated_genome_path"]),
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
         directory(os.path.join(results_path, "ntlink_prelim/{mag}"))
@@ -28,7 +28,7 @@ rule ntlink_prelim:
 
 rule longstitch:
     input:
-        mag = config["dereplicated_genome_path"],
+        mag = ancient(config["dereplicated_genome_path"]),
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
         # tmp_dir = temp(directory(os.path.join(results_path, "longstitch/parking/{mag}"))),

@@ -5,7 +5,7 @@ def get_dereplicated_genomes_path(wildcards):
 
 rule copy_genomes:
     input:
-        get_dereplicated_genomes_path
+        ancient(get_dereplicated_genomes_path)
     output:
         done = touch(os.path.join(results_path_ie79, "tmp/copy_genomes/{sample}.done"))
     shell:

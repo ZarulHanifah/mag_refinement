@@ -132,7 +132,7 @@ def run_workflow(mags_to_process: list[str],
             "--snakefile", "Snakefile",
             "--configfile", str(snake_config_path),
         ]
-        
+
         # 1. Unlock the directory
         unlock_cmd = base_cmd + ["--unlock"]
         print(f"Unlocking directory... {' '.join(unlock_cmd)}")
@@ -155,7 +155,9 @@ def run_workflow(mags_to_process: list[str],
         if dry_run:
             run_cmd.append("--dryrun")
 
-        print(f"Executing command: {' '.join(run_cmd)}")
+        cmd_str = ' '.join(run_cmd)
+        cmd_str = "\\\n    --".join(cmd_str.split("--"))
+        print(f"Executing command:\n{cmd_str}")
         result = subprocess.run(run_cmd)
         if result.returncode != 0:
             print(f"Workflow failed on chunk {i}. Aborting.", file=sys.stderr)

@@ -23,3 +23,6 @@ myloasm_fq:
 hifiasm_fq:
   threads : 4
   etc     : " --mem=40G "
+checkm_original:
+  threads : 2
+  etc     : " --mem=40G "

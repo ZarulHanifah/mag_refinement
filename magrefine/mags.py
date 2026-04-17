@@ -24,26 +24,6 @@ class BaseMag(ABC):
     contamination: float
     total_contigs: int
 
-    @property
-    def fp(self) -> str: 
-        return str(self._fp)
-
-    @property
-    def sample(self) -> str: 
-        return self.name.split("_")[0]
-
-    @property
-    def long_sample(self) -> str: 
-        return f"C00{self.sample[1]}_{self.sample[2:4]}"
-
-    @property
-    def binner(self) -> str: 
-        return self.name.split("_")[2].split(".")[0]
-
-    @property
-    def assembler(self) -> str: 
-        return { "A": "myloasm", "M": "medaka", "P": "proovframe" }[self.name.split("_")[1]]
-
     # Subclasses must implement completeness, contamination, and total_contigs
 
     def is_high_quality(self) -> bool:
@@ -250,6 +230,26 @@ class Mag(BaseMag):
     def has_23s_rrna(self): return self._has_23s
     def has_5s_rrna(self):  return self._has_5s
 
+    @property
+    def fp(self) -> str:
+        return str(self._fp)
+
+    @property
+    def sample(self) -> str:
+        return self.name.split("_")[0]
+
+    @property
+    def long_sample(self) -> str:
+        return f"C00{self.sample[1]}_{self.sample[2:4]}"
+
+    @property
+    def binner(self) -> str:
+        return self.name.split("_")[2].split(".")[0]
+
+    @property
+    def assembler(self) -> str:
+        return { "A": "myloasm", "M": "medaka", "P": "proovframe" }[self.name.split("_")[1]]
+
     def __repr__(self): 
         return (
             f"{self.__class__.__name__}"
@@ -411,9 +411,9 @@ class RefinedMag(BaseMag):
         )
 
 
-if __name__ == "__main__":
-    fp = Path("tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
-    checkmqual = Path("tests/input_folder/checkm2/C1E5_M_metabat.1297.fasta/quality_report.tsv")
-    root = RefinedMag.from_checkmqual("C1E5_M_metabat.1297", fp, checkmqual, None)
-    childF1 = RefinedMag.from_checkmqual("C1E5_M_metabat.1297", fp, checkmqual, root)
-    
+# if __name__ == "__main__":
+#     fp = Path("tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
+#     checkmqual = Path("tests/input_folder/checkm2/C1E5_M_metabat.1297.fasta/quality_report.tsv")
+#     root = RefinedMag.from_checkmqual("C1E5_M_metabat.1297", fp, checkmqual, None)
+#     childF1 = RefinedMag.from_checkmqual("C1E5_M_metabat.1297", fp, checkmqual, root)
+#

@@ -31,9 +31,7 @@ rule longstitch:
         mag = ancient(config["dereplicated_genome_path"]),
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        # tmp_dir = temp(directory(os.path.join(results_path, "longstitch/parking/{mag}"))),
-        # tmp_mag = temp(os.path.join(results_path, "longstitch/parking/{mag}/{mag}.fa")),
-        mag = os.path.join(results_path, "longstitch/{mag}/{mag}.longstitch.fasta"),
+        assem = os.path.join(results_path, "longstitch/{mag}/{mag}.longstitch.fasta"),
         supp = directory(os.path.join(results_path, "longstitch/{mag}/other_files"))
     log:
         os.path.join(results_path, "log/longstitch/{mag}.log")

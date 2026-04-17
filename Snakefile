@@ -59,4 +59,10 @@ rule all:
         expand(rules.myloasm_fq.output.assem, mag=mags),
         expand(rules.longstitch.output, mag=mags),
         expand(rules.checkm2_original.output.report, mag=mags),
+        expand(rules.checkm2_flye_fq.output.report, mag=mags),
+        expand(rules.checkm2_hifiasm_fq.output.report, mag=mags),
+        expand(rules.checkm2_myloasm_fq.output.report, mag=mags),
+        expand(rules.checkm2_longstitch.output.report, mag=mags),
+        expand(rules.checkm1_original.output.report, mag=mags),
         expand(rules.magpurify2_coverage.output, mag=mags)
+

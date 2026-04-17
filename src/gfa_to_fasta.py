@@ -24,8 +24,10 @@ def main():
             seq = fields[2]
             if seq == "*":
                 continue
-        out.write(f">{name}\n")
-        out.write(seq + "\n")
+
+            # previously wrong indent
+            out.write(f">{name}\n")
+            out.write(seq + "\n")
 
     if out is not sys.stdout:
         out.close()

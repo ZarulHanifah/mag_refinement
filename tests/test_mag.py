@@ -85,6 +85,23 @@ def test_refinedmag_init_from_fasta_and_checkm2qual():
     assert mag.total_contigs == 145
     assert mag.parent is None 
 
+def test_refinedmag_init_checkm2_missing_file():
+    mag_name = "C1E5_M_metabat.1297"
+    _fp = Path("./tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
+    checkmqual = Path("./non_existent_file.tsv")
+
+    with pytest.raises(FileNotFoundError, match="CheckM2 quality path does not exist"):
+        RefinedMag.from_checkm2qual(mag_name, _fp, checkmqual, parent=None)
+
+def test_refinedmag_init_checkm2_missing_in_dir(tmp_path):
+    mag_name = "C1E5_M_metabat.1297"
+    _fp = Path("./tests/input_folder/dereplicated_genomes/C1E5_M_metabat.1297.fasta")
+    empty_dir = tmp_path / "empty_checkm2"
+    empty_dir.mkdir()
+
+    with pytest.raises(FileNotFoundError, match="Could not find quality_report.tsv"):
+        RefinedMag.from_checkm2qual(mag_name, _fp, empty_dir, parent=None)
+
 def test_refinedmag_init_from_fasta_and_checkm1qual(mock_checkm1_file):
     mag_name = "C1E5_M_metabat.1297"
 

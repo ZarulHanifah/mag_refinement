@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ast
 import os
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Generator, Optional, Sequence
@@ -139,43 +139,6 @@ class BaseMag(ABC):
 
         return "\n".join(lines)
 
-    def get_depth_df(self) -> pd.DataFrame:
-        """
-        Generates a pandas DataFrame of contig depths for all samples.
-        """
-        depths = [ contigid.get_abund_info() for contigid in self.contigids ]
-        indices = [contigid.name for contigid in self.contigids]
-        return pd.DataFrame(depths, index=pd.Index(indices))
-
-    def get_depth_per_contig(self, contigid: BaseContigID, samplename=None):
-        if samplename:
-            return contigid.get_abund_info()[samplename]
-        return contigid.depth_from_all_samples
-
-    @property
-    def average_coverage_total(self) -> float:
-        total_length = 0
-        total_bases = 0
-        for c in self.contigids:
-            length = c.length or 0  # Fallback gracefully
-            total_bases += c.depth_from_all_samples * length
-            total_length += length
-        if total_length == 0: return 0.0
-        return total_bases / total_length
-
-    def average_coverage_per_sample(self, samplename: Optional[str] = None ) -> float:
-        if samplename == None:
-            samplename = self.long_sample
-        values = [ (contigid.name, contigid.length or 0, self.get_depth_per_contig(contigid, samplename) )
-                  for contigid in self.contigids ]
-        total_bases = 0
-        for v in values:
-            total_bases += v[1] * v[2]
-
-        total_len = sum([v[1] for v in values])
-        if total_len == 0: return 0.0
-        return total_bases / total_len
-
 
 @dataclass
 class Mag(BaseMag):
@@ -262,6 +225,43 @@ class Mag(BaseMag):
             f"total_contigs={self.total_contigs})"
         )
 
+    def get_depth_df(self) -> pd.DataFrame:
+        """
+        Generates a pandas DataFrame of contig depths for all samples.
+        """
+        depths = [ contigid.get_abund_info() for contigid in self.contigids ]
+        indices = [contigid.name for contigid in self.contigids]
+        return pd.DataFrame(depths, index=pd.Index(indices))
+
+    def get_depth_per_contig(self, contigid: BaseContigID, samplename=None):
+        if samplename:
+            return contigid.get_abund_info()[samplename]
+        return contigid.depth_from_all_samples
+
+    @property
+    def average_coverage_total(self) -> float:
+        total_length = 0
+        total_bases = 0
+        for c in self.contigids:
+            length = c.length or 0  # Fallback gracefully
+            total_bases += c.depth_from_all_samples * length
+            total_length += length
+        if total_length == 0: return 0.0
+        return total_bases / total_length
+
+    def average_coverage_per_sample(self, samplename: Optional[str] = None ) -> float:
+        if samplename == None:
+            samplename = self.long_sample
+        values = [ (contigid.name, contigid.length or 0, self.get_depth_per_contig(contigid, samplename) )
+                  for contigid in self.contigids ]
+        total_bases = 0
+        for v in values:
+            total_bases += v[1] * v[2]
+
+        total_len = sum([v[1] for v in values])
+        if total_len == 0: return 0.0
+        return total_bases / total_len
+
 
 @dataclass
 class RefinedMag(BaseMag):
@@ -332,33 +332,50 @@ class RefinedMag(BaseMag):
         ]
 
     @staticmethod
-    def get_checkm1qualfile(folder: Path) -> Path:    # pyright: ignore
-        for root, folders, files, in os.walk(folder):
-            for filename in folders + files:
-                fn = os.path.join(root, filename)
-                if fn.endswith(f"{folder}/storage/bin_stats_ext.tsv"):
-                    return Path(fn)
+    def get_checkm1qualfile(folder: Path) -> Optional[Path]:
+        """
+        Locates the CheckM1 quality file (bin_stats_ext.tsv) within a folder.
+        """
+        target = folder / "storage" / "bin_stats_ext.tsv"
+        if target.is_file():
+            return target
+        
+        # Fallback search
+        for root, _, files in os.walk(folder):
+            if "bin_stats_ext.tsv" in files:
+                return Path(root) / "bin_stats_ext.tsv"
+        return None
 
     @staticmethod
-    def get_checkm2qualfile(folder: Path) -> Path:    # pyright: ignore
-        for root, folders, files, in os.walk(folder):
-            for filename in folders + files:
-                fn = os.path.join(root, filename)
-                if fn.endswith(f"{folder}/quality_report.tsv"):
-                    return Path(fn)
+    def get_checkm2qualfile(folder: Path) -> Optional[Path]:
+        """
+        Locates the CheckM2 quality file (quality_report.tsv) within a folder.
+        """
+        target = folder / "quality_report.tsv"
+        if target.is_file():
+            return target
+        
+        # Fallback search
+        for root, _, files in os.walk(folder):
+            if "quality_report.tsv" in files:
+                return Path(root) / "quality_report.tsv"
+        return None
 
     @classmethod
     def from_checkm2qual(cls,
                         mag_name: str,
                         _fp: Path,
-                        checkmqual: Path,    # can be the quality_report.tsv or even the folder containing the file
+                        checkmqual: Path | str,    # can be the quality_report.tsv or even the folder containing the file
                         parent: Optional[BaseMag] = None) -> RefinedMag:
+        checkmqual = Path(checkmqual)
         if checkmqual.is_file():
             _checkmqual = checkmqual
         elif checkmqual.is_dir():
-            _checkmqual = cls.get_checkm2qualfile(checkmqual) 
+            _checkmqual = cls.get_checkm2qualfile(checkmqual)
+            if _checkmqual is None:
+                raise FileNotFoundError(f"Could not find quality_report.tsv in {checkmqual}")
         else:
-            raise TypeError(f"What is {checkmqual}?")
+            raise FileNotFoundError(f"CheckM2 quality path does not exist: {checkmqual}")
 
         checkm_dict = cls.read_checkm2_df(mag_name, _checkmqual)
         # how checkm_dict looks like:
@@ -378,14 +395,17 @@ class RefinedMag(BaseMag):
     def from_checkm1qual(cls,
                         mag_name: str,
                         _fp: Path,
-                        checkmqual: Path,    # can be the quality_report.tsv or even the folder containing the file
+                        checkmqual: Path | str,    # can be the quality_report.tsv or even the folder containing the file
                         parent: Optional[BaseMag] = None) -> RefinedMag:
+        checkmqual = Path(checkmqual)
         if checkmqual.is_file():
             _checkmqual = checkmqual
         elif checkmqual.is_dir():
-            _checkmqual = cls.get_checkm1qualfile(checkmqual) 
+            _checkmqual = cls.get_checkm1qualfile(checkmqual)
+            if _checkmqual is None:
+                raise FileNotFoundError(f"Could not find bin_stats_ext.tsv in {checkmqual}")
         else:
-            raise TypeError(f"What is {checkmqual}?")
+            raise FileNotFoundError(f"CheckM1 quality path does not exist: {checkmqual}")
 
         checkm_dict = cls.read_checkm1_tsv(mag_name, _checkmqual)
         contigids = RefinedMag.get_mylocontigid_from_fasta_file(_fp)
@@ -404,9 +424,6 @@ class RefinedMag(BaseMag):
             f"(name={self.name}, "
             f"completeness={self.completeness}, "
             f"contamination={self.contamination}, "
-            f"assembler={self.assembler}, "
-            f"sample={self.sample}, "
-            f"binner={self.binner}, "
             f"total_contigs={self.total_contigs})"
         )
 

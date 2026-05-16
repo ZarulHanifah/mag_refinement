@@ -138,6 +138,89 @@ rule checkm2_longstitch:
          --output-directory $outfolder &> {log}
         """
 
+rule checkm2_medaka:
+    input:
+        mag = ancient(rules.medaka.output.assem),
+        db = ancient(checkm2_db)
+    output:
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/medaka/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/medaka/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/medaka/{mag}/quality_report.tsv")
+    conda: "checkm2_"
+    threads: 2
+    log: os.path.join(results_path, "log/checkm2/medaka/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: medaka"
+    shell:
+        """
+        cp {input.mag} {output.tmp}
+        input_genome=$(find {output.tmp} | grep "fasta")
+
+        outfolder=$(dirname {output.report})
+
+        checkm2 predict --force \
+         --threads {threads} \
+         --input $input_genome \
+         --database_path {input.db} \
+         --output-directory $outfolder &> {log}
+        """
+
+rule checkm2_proovframe:
+    input:
+        mag = rules.proovframe.output.assem,
+        db = checkm2_db
+    output:
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/proovframe/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/proovframe/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/proovframe/{mag}/quality_report.tsv")
+    conda: "checkm2_"
+    threads: 2
+    log: os.path.join(results_path, "log/checkm2/proovframe/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: proovframe"
+    shell:
+        """
+        cp {input.mag} {output.tmp}
+        input_genome=$(find {output.tmp} | grep "fasta")
+
+        outfolder=$(dirname {output.report})
+
+        checkm2 predict --force \
+         --threads {threads} \
+         --input $input_genome \
+         --database_path {input.db} \
+         --output-directory $outfolder &> {log}
+        """
+
+rule checkm2_medaka_rd2:
+    input:
+        mag = ancient(rules.medaka_rd2.output.assem),
+        db = ancient(checkm2_db)
+    output:
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/medaka_rd2/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/medaka_rd2/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/medaka_rd2/{mag}/quality_report.tsv")
+    conda: "checkm2_"
+    threads: 2
+    log: os.path.join(results_path, "log/checkm2/medaka_rd2/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: medaka_rd2"
+    shell:
+        """
+        cp {input.mag} {output.tmp}
+        input_genome=$(find {output.tmp} | grep "fasta")
+
+        outfolder=$(dirname {output.report})
+
+        checkm2 predict --force \
+         --threads {threads} \
+         --input $input_genome \
+         --database_path {input.db} \
+         --output-directory $outfolder &> {log}
+        """
 
 rule checkm1_original:
     input:

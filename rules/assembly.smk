@@ -45,9 +45,6 @@ rule collect_minimap2_fq:
         os.path.join(temp_path, "minimap2_fq_collected/{mag}/all.fq")
     shell:
         """
-        # mkdir -p {output}
-        # cat {input} > {output}/all.fq
-
         cat {input} > {output}
         """
 
@@ -56,16 +53,16 @@ rule flye_fq:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
         remove_list = temp([
-            directory(os.path.join(results_path, "flye_fq/{mag}/00-assembly/")),
-            directory(os.path.join(results_path, "flye_fq/{mag}/10-consensus/")),
-            directory(os.path.join(results_path, "flye_fq/{mag}/20-repeat/")),
-            directory(os.path.join(results_path, "flye_fq/{mag}/30-contigger/")),
-            directory(os.path.join(results_path, "flye_fq/{mag}/40-polishing/")),
+            directory(os.path.join(results_path, "flye/{mag}/00-assembly/")),
+            directory(os.path.join(results_path, "flye/{mag}/10-consensus/")),
+            directory(os.path.join(results_path, "flye/{mag}/20-repeat/")),
+            directory(os.path.join(results_path, "flye/{mag}/30-contigger/")),
+            directory(os.path.join(results_path, "flye/{mag}/40-polishing/")),
         ]),
-        assem_p = os.path.join(results_path, "flye_fq/{mag}/assembly.fasta"),
-        assem = os.path.join(results_path, "flye_fq/{mag}/{mag}.flye.fasta")
+        assem_p = os.path.join(results_path, "flye/{mag}/assembly.fasta"),
+        assem = os.path.join(results_path, "flye/{mag}/{mag}.flye.fasta")
     log:
-        os.path.join(results_path, "log/flye_fq/{mag}.log")
+        os.path.join(results_path, "log/flye/{mag}.log")
     conda: "flye_"
     threads: 8
     shell:
@@ -80,10 +77,10 @@ rule hifiasm_fq:
     input:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
-        gfa = os.path.join(results_path, "hifiasm_fq/{mag}/{mag}.p_ctg.gfa"),
-        assem = os.path.join(results_path, "hifiasm_fq/{mag}/{mag}.hifiasm.fasta"),
+        gfa = os.path.join(results_path, "hifiasm/{mag}/{mag}.p_ctg.gfa"),
+        assem = os.path.join(results_path, "hifiasm/{mag}/{mag}.hifiasm.fasta"),
     log:
-        os.path.join(results_path, "log/hifiasm_fq/{mag}.log")
+        os.path.join(results_path, "log/hifiasm/{mag}.log")
     conda: "hifiasm_"
     threads: 4
     shell:
@@ -99,18 +96,18 @@ rule myloasm_fq:
         fq = lambda wc: os.path.join(temp_path, f"minimap2_fq_collected/{wc.mag}/all.fq")
     output:
         remove_list = temp([
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/0-cleaning_and_unitigs/")),
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/1-light_resolve/")),
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/2-heavy_path_resolve/")),
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/3-mapping/")),
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/alternate_assemblies/")),
-            directory(os.path.join(results_path, "myloasm_fq/{mag}/binary_temp/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/0-cleaning_and_unitigs/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/1-light_resolve/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/2-heavy_path_resolve/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/3-mapping/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/alternate_assemblies/")),
+            directory(os.path.join(results_path, "myloasm/{mag}/binary_temp/")),
         ]),
-        assem_p = os.path.join(results_path, "myloasm_fq/{mag}/assembly_primary.fa"),
-        assem = os.path.join(results_path, "myloasm_fq/{mag}/{mag}.myloasm.fasta"),
+        assem_p = os.path.join(results_path, "myloasm/{mag}/assembly_primary.fa"),
+        assem = os.path.join(results_path, "myloasm/{mag}/{mag}.myloasm.fasta"),
     conda: "myloasm_"
     log:
-        os.path.join(results_path, "log/myloasm_fq/{mag}.log")
+        os.path.join(results_path, "log/myloasm/{mag}.log")
     threads: 8
     shell:
         """

@@ -47,6 +47,7 @@ include: "rules/herro.smk"
 include: "rules/assembly.smk"
 include: "rules/coverm.smk"
 include: "rules/ntlink.smk"
+include: "rules/medaka.smk"
 include: "rules/checkm2.smk"
 
 wildcard_constraints:
@@ -63,6 +64,9 @@ rule all:
         expand(rules.checkm2_hifiasm_fq.output.report, mag=mags),
         expand(rules.checkm2_myloasm_fq.output.report, mag=mags),
         expand(rules.checkm2_longstitch.output.report, mag=mags),
+        expand(rules.checkm2_medaka.output.report, mag=mags),
+        expand(rules.checkm2_proovframe.output.report, mag=mags),
+        expand(rules.checkm2_medaka_rd2.output.report, mag=mags),
         expand(rules.checkm1_original.output.report, mag=mags),
-        expand(rules.magpurify2_coverage.output, mag=mags)
+        expand(rules.magpurify2_coverage.output, mag=mags),
 

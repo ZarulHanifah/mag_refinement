@@ -18,23 +18,58 @@ sesh = SessionManager(
 )
 
 # mag_name = "C1E5_M_metabat.1297"
+mag_names = os.listdir("results/flye/")
 
-for mag_name in os.listdir("results/flye_fq/"):
+for mag_name in mag_names:
     root = sesh.get_mag(mag_name)
 
     assemblers = [
-        "flye_fq",
-        "hifiasm_fq",
-        "myloasm_fq",
-        "longstitch"
+        "flye",
+        "hifiasm",
+        "myloasm",
+        "longstitch",
+        # "medaka",
     ]
 
     for assem in assemblers:
-        short_assem = assem.split("_")[0]
-        assem_fp = Path(f"results/{assem}/{mag_name}/{mag_name}.{short_assem}.fasta")
-        assem_checkmqual = Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv")
-        childF1 = RefinedMag.from_checkm2qual(mag_name, assem_fp, assem_checkmqual, root)
+        childF1 = RefinedMag.from_checkm2qual(
+          mag_name,
+          Path(f"results/{assem}/{mag_name}/{mag_name}.{assem}.fasta"),
+          Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv"),
+          root
+        )
         childF1.name = assem
 
-    print(mag_name, root.classification)
+    # medaka rd1
+    assem = "medaka"
+    medaka_rd1 = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/{assem}/{mag_name}/{mag_name}.{assem}.fasta"),
+      Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv"),
+      root,
+    )
+    medaka_rd1.name = "medaka_rd1"
+
+    # medaka rd1 --> proovframe
+    assem = "proovframe"
+    proovframe = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/proovframe/assem/{mag_name}.fasta"),
+      Path(f"results/checkm2/proovframe/{mag_name}/quality_report.tsv"),
+      medaka_rd1,
+    )
+    proovframe.name = "proovframe"
+
+    # medaka rd1 --> proovframe
+    assem = "medaka_rd2"
+    medaka_rd2 = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/{assem}/{mag_name}.fasta"),
+      Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv"),
+      medaka_rd1,
+    )
+    medaka_rd2.name = "medaka_rd2"
+
+    # print(mag_name, root.classification)
+    print(mag_name)
     print(root.tree_report())

@@ -1,0 +1,313 @@
+C2E1_A_semibin.165 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae
+;g__Njordarchaeum;s__
+└── C2E1_A_semibin.165 (Comp: 95.02% | Contam: 5.14% | Contigs: 1)
+    │
+    ↓ (comp: +2.73%, contam: +0.39%, contigs: +7)
+    ├── flye (Comp: 97.75% | Contam: 5.53% | Contigs: 8)
+    │
+    ↓ (comp: +2.90%, contam: +3.32%, contigs: +14)
+    ├── hifiasm (Comp: 97.92% | Contam: 8.46% | Contigs: 15)
+    │
+    ↓ (comp: +1.57%, contam: +0.55%, contigs: +7)
+    ├── myloasm (Comp: 96.59% | Contam: 5.69% | Contigs: 8)
+    │
+    ↓ (comp: +3.25%, contam: -0.05%, contigs: +27)
+    ├── longstitch (Comp: 98.27% | Contam: 5.09% | Contigs: 28)
+    │
+    ↓ (comp: +3.25%, contam: +0.03%, contigs: +0)
+    └── medaka_rd1 (Comp: 98.27% | Contam: 5.17% | Contigs: 1)
+        │
+        ↓ (comp: -6.19%, contam: -0.09%, contigs: +0)
+        ├── proovframe (Comp: 92.08% | Contam: 5.08% | Contigs: 1)
+        │
+        ↓ (comp: +0.00%, contam: +0.11%, contigs: +0)
+        └── medaka_rd2 (Comp: 98.27% | Contam: 5.28% | Contigs: 1)
+C1J2_M_metabat.840 
+d__Archaea;p__Asgardarchaeota;c__Jordarchaeia;o__Jordarchaeales;f__Jordarchaeaceae;g__Jordarchaeum;s__
+└── C1J2_M_metabat.840 (Comp: 56.23% | Contam: 3.90% | Contigs: 205)
+    │
+    ↓ (comp: -29.43%, contam: -3.26%, contigs: -83)
+    ├── flye (Comp: 26.80% | Contam: 0.64% | Contigs: 122)
+    │
+    ↓ (comp: -50.06%, contam: -3.90%, contigs: -184)
+    ├── hifiasm (Comp: 6.17% | Contam: 0.00% | Contigs: 21)
+    │
+    ↓ (comp: -24.87%, contam: -0.72%, contigs: -82)
+    ├── myloasm (Comp: 31.36% | Contam: 3.18% | Contigs: 123)
+    │
+    ↓ (comp: +2.65%, contam: +0.19%, contigs: -17)
+    ├── longstitch (Comp: 58.88% | Contam: 4.09% | Contigs: 188)
+    │
+    ↓ (comp: -2.52%, contam: -1.15%, contigs: +0)
+    └── medaka_rd1 (Comp: 53.71% | Contam: 2.75% | Contigs: 205)
+        │
+        ↓ (comp: +9.09%, contam: +5.05%, contigs: +0)
+        ├── proovframe (Comp: 62.80% | Contam: 7.80% | Contigs: 205)
+        │
+        ↓ (comp: -0.18%, contam: +0.24%, contigs: +0)
+        └── medaka_rd2 (Comp: 53.53% | Contam: 2.99% | Contigs: 205)
+C3E3_M_semibin.322 
+d__Archaea;p__Asgardarchaeota;c__Jordarchaeia;o__Jordarchaeales;f__Jordarchaeaceae;g__Jordarchaeum;s__
+└── C3E3_M_semibin.322 (Comp: 60.72% | Contam: 2.52% | Contigs: 1)
+    │
+    ↓ (comp: -1.96%, contam: +1.25%, contigs: +41)
+    ├── flye (Comp: 58.76% | Contam: 3.77% | Contigs: 42)
+    │
+    ↓ (comp: -3.76%, contam: +6.32%, contigs: +68)
+    ├── hifiasm (Comp: 56.96% | Contam: 8.84% | Contigs: 69)
+    │
+    ↓ (comp: +3.00%, contam: -0.09%, contigs: +11)
+    ├── myloasm (Comp: 63.72% | Contam: 2.43% | Contigs: 12)
+    │
+    ↓ (comp: +1.14%, contam: -0.01%, contigs: +20)
+    ├── longstitch (Comp: 61.86% | Contam: 2.51% | Contigs: 21)
+    │
+    ↓ (comp: +1.91%, contam: -0.10%, contigs: +0)
+    └── medaka_rd1 (Comp: 62.63% | Contam: 2.42% | Contigs: 1)
+        │
+        ↓ (comp: -1.66%, contam: +0.16%, contigs: +0)
+        ├── proovframe (Comp: 60.97% | Contam: 2.58% | Contigs: 1)
+        │
+        ↓ (comp: -0.37%, contam: -0.02%, contigs: +0)
+        └── medaka_rd2 (Comp: 62.26% | Contam: 2.40% | Contigs: 1)
+C2E1_M_semibin.284 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C2E1_M_semibin.284 (Comp: 81.49% | Contam: 1.20% | Contigs: 1)
+    │
+    ↓ (comp: -3.28%, contam: +2.87%, contigs: +42)
+    ├── flye (Comp: 78.21% | Contam: 4.07% | Contigs: 43)
+    │
+    ↓ (comp: -15.94%, contam: -0.28%, contigs: +78)
+    ├── hifiasm (Comp: 65.55% | Contam: 0.92% | Contigs: 79)
+    │
+    ↓ (comp: -11.76%, contam: -0.13%, contigs: +6)
+    ├── myloasm (Comp: 69.73% | Contam: 1.07% | Contigs: 7)
+    │
+    ↓ (comp: -0.53%, contam: +0.01%, contigs: +0)
+    ├── longstitch (Comp: 80.96% | Contam: 1.21% | Contigs: 1)
+    │
+    ↓ (comp: -3.19%, contam: -0.31%, contigs: +0)
+    └── medaka_rd1 (Comp: 78.30% | Contam: 0.89% | Contigs: 1)
+        │
+        ↓ (comp: +4.19%, contam: +1.45%, contigs: +0)
+        ├── proovframe (Comp: 82.49% | Contam: 2.34% | Contigs: 1)
+        │
+        ↓ (comp: -0.07%, contam: -0.01%, contigs: +0)
+        └── medaka_rd2 (Comp: 78.23% | Contam: 0.88% | Contigs: 1)
+C2E1_M_metabat.1020 
+d__Archaea;p__Asgardarchaeota;c__Jordarchaeia;o__Jordarchaeales;f__Jordarchaeaceae;g__Jordarchaeum;s__
+└── C2E1_M_metabat.1020 (Comp: 79.28% | Contam: 4.71% | Contigs: 104)
+    │
+    ↓ (comp: -35.53%, contam: -2.40%, contigs: +115)
+    ├── flye (Comp: 43.75% | Contam: 2.31% | Contigs: 219)
+    │
+    ↓ (comp: -58.01%, contam: -3.81%, contigs: -31)
+    ├── hifiasm (Comp: 21.27% | Contam: 0.90% | Contigs: 73)
+    │
+    ↓ (comp: -18.04%, contam: -0.44%, contigs: +54)
+    ├── myloasm (Comp: 61.24% | Contam: 4.27% | Contigs: 158)
+    │
+    ↓ (comp: -4.18%, contam: +1.71%, contigs: -6)
+    ├── longstitch (Comp: 75.10% | Contam: 6.42% | Contigs: 98)
+    │
+    ↓ (comp: -14.06%, contam: -1.49%, contigs: +0)
+    └── medaka_rd1 (Comp: 65.22% | Contam: 3.22% | Contigs: 104)
+        │
+        ↓ (comp: +7.54%, contam: +2.28%, contigs: +0)
+        ├── proovframe (Comp: 72.76% | Contam: 5.50% | Contigs: 104)
+        │
+        ↓ (comp: -1.72%, contam: +0.68%, contigs: +0)
+        └── medaka_rd2 (Comp: 63.50% | Contam: 3.90% | Contigs: 104)
+C2E1_M_semibin.297 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C2E1_M_semibin.297 (Comp: 89.36% | Contam: 3.63% | Contigs: 1)
+    │
+    ↓ (comp: +1.79%, contam: +2.43%, contigs: +11)
+    ├── flye (Comp: 91.15% | Contam: 6.06% | Contigs: 12)
+    │
+    ↓ (comp: -0.04%, contam: +10.16%, contigs: +40)
+    ├── hifiasm (Comp: 89.32% | Contam: 13.79% | Contigs: 41)
+    │
+    ↓ (comp: -22.19%, contam: +0.83%, contigs: +7)
+    ├── myloasm (Comp: 67.17% | Contam: 4.46% | Contigs: 8)
+    │
+    ↓ (comp: +0.52%, contam: +0.72%, contigs: +12)
+    ├── longstitch (Comp: 89.88% | Contam: 4.35% | Contigs: 13)
+    │
+    ↓ (comp: +2.73%, contam: +0.62%, contigs: +0)
+    └── medaka_rd1 (Comp: 92.09% | Contam: 4.25% | Contigs: 1)
+        │
+        ↓ (comp: -0.06%, contam: -1.25%, contigs: +0)
+        ├── proovframe (Comp: 92.03% | Contam: 3.00% | Contigs: 1)
+        │
+        ↓ (comp: +0.00%, contam: -0.02%, contigs: +0)
+        └── medaka_rd2 (Comp: 92.09% | Contam: 4.23% | Contigs: 1)
+C1E5_M_metabat.1297 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C1E5_M_metabat.1297 (Comp: 75.18% | Contam: 7.35% | Contigs: 145)
+    │
+    ↓ (comp: -3.29%, contam: -2.17%, contigs: +46)
+    ├── flye (Comp: 71.89% | Contam: 5.18% | Contigs: 191)
+    │
+    ↓ (comp: -24.23%, contam: -5.62%, contigs: -40)
+    ├── hifiasm (Comp: 50.95% | Contam: 1.73% | Contigs: 105)
+    │
+    ↓ (comp: -28.75%, contam: +1.73%, contigs: +6)
+    ├── myloasm (Comp: 46.43% | Contam: 9.08% | Contigs: 151)
+    │
+    ↓ (comp: +2.28%, contam: -0.61%, contigs: +132)
+    ├── longstitch (Comp: 77.46% | Contam: 6.74% | Contigs: 277)
+    │
+    ↓ (comp: +1.99%, contam: -0.72%, contigs: +0)
+    └── medaka_rd1 (Comp: 77.17% | Contam: 6.63% | Contigs: 145)
+        │
+        ↓ (comp: +0.03%, contam: +2.41%, contigs: +0)
+        ├── proovframe (Comp: 77.20% | Contam: 9.04% | Contigs: 145)
+        │
+        ↓ (comp: +0.70%, contam: +0.06%, contigs: +0)
+        └── medaka_rd2 (Comp: 77.87% | Contam: 6.69% | Contigs: 145)
+C3D5_M_semibin.530 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C3D5_M_semibin.530 (Comp: 50.78% | Contam: 3.15% | Contigs: 1)
+    │
+    ↓ (comp: -14.67%, contam: -0.52%, contigs: +50)
+    ├── flye (Comp: 36.11% | Contam: 2.63% | Contigs: 51)
+    │
+    ↓ (comp: -24.02%, contam: -1.56%, contigs: +57)
+    ├── hifiasm (Comp: 26.76% | Contam: 1.59% | Contigs: 58)
+    │
+    ↓ (comp: -19.52%, contam: -0.96%, contigs: +24)
+    ├── myloasm (Comp: 31.26% | Contam: 2.19% | Contigs: 25)
+    │
+    ↓ (comp: -3.74%, contam: -0.28%, contigs: +0)
+    ├── longstitch (Comp: 47.04% | Contam: 2.87% | Contigs: 1)
+    │
+    ↓ (comp: -6.17%, contam: -1.15%, contigs: +0)
+    └── medaka_rd1 (Comp: 44.61% | Contam: 2.00% | Contigs: 1)
+        │
+        ↓ (comp: +0.03%, contam: -0.20%, contigs: +0)
+        ├── proovframe (Comp: 44.64% | Contam: 1.80% | Contigs: 1)
+        │
+        ↓ (comp: -1.77%, contam: -0.44%, contigs: +0)
+        └── medaka_rd2 (Comp: 42.84% | Contam: 1.56% | Contigs: 1)
+C2E1_A_metabat.1742 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C2E1_A_metabat.1742 (Comp: 57.59% | Contam: 8.73% | Contigs: 200)
+    │
+    ↓ (comp: -27.31%, contam: -6.54%, contigs: -39)
+    ├── flye (Comp: 30.28% | Contam: 2.19% | Contigs: 161)
+    │
+    ↓ (comp: -50.94%, contam: -8.73%, contigs: -184)
+    ├── hifiasm (Comp: 6.65% | Contam: 0.00% | Contigs: 16)
+    │
+    ↓ (comp: -18.41%, contam: -3.33%, contigs: +4)
+    ├── myloasm (Comp: 39.18% | Contam: 5.40% | Contigs: 204)
+    │
+    ↓ (comp: +5.37%, contam: +2.21%, contigs: +0)
+    ├── longstitch (Comp: 62.96% | Contam: 10.94% | Contigs: 200)
+    │
+    ↓ (comp: -2.49%, contam: -2.18%, contigs: +0)
+    └── medaka_rd1 (Comp: 55.10% | Contam: 6.55% | Contigs: 200)
+        │
+        ↓ (comp: +21.04%, contam: +11.19%, contigs: +0)
+        ├── proovframe (Comp: 76.14% | Contam: 17.74% | Contigs: 200)
+        │
+        ↓ (comp: -1.62%, contam: -0.04%, contigs: +0)
+        └── medaka_rd2 (Comp: 53.48% | Contam: 6.51% | Contigs: 200)
+C2E1_P_metabat.1230 
+d__Archaea;p__Asgardarchaeota;c__Jordarchaeia;o__Jordarchaeales;f__Jordarchaeaceae;g__Jordarchaeum;s__
+└── C2E1_P_metabat.1230 (Comp: 65.24% | Contam: 0.09% | Contigs: 3)
+    │
+    ↓ (comp: -2.80%, contam: +0.52%, contigs: +20)
+    ├── flye (Comp: 62.44% | Contam: 0.61% | Contigs: 23)
+    │
+    ↓ (comp: -4.81%, contam: +1.06%, contigs: +9)
+    ├── hifiasm (Comp: 60.43% | Contam: 1.15% | Contigs: 12)
+    │
+    ↓ (comp: -6.60%, contam: +0.38%, contigs: +2)
+    ├── myloasm (Comp: 58.64% | Contam: 0.47% | Contigs: 5)
+    │
+    ↓ (comp: -1.17%, contam: +0.10%, contigs: +0)
+    ├── longstitch (Comp: 64.07% | Contam: 0.19% | Contigs: 3)
+    │
+    ↓ (comp: -5.11%, contam: +0.43%, contigs: +0)
+    └── medaka_rd1 (Comp: 60.13% | Contam: 0.52% | Contigs: 3)
+        │
+        ↓ (comp: +2.22%, contam: -0.28%, contigs: +0)
+        ├── proovframe (Comp: 62.35% | Contam: 0.24% | Contigs: 3)
+        │
+        ↓ (comp: -0.10%, contam: -0.02%, contigs: +0)
+        └── medaka_rd2 (Comp: 60.03% | Contam: 0.50% | Contigs: 3)
+C2E1_A_semibin.169 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C2E1_A_semibin.169 (Comp: 100.00% | Contam: 4.34% | Contigs: 1)
+    │
+    ↓ (comp: +0.00%, contam: +1.50%, contigs: +2)
+    ├── flye (Comp: 100.00% | Contam: 5.84% | Contigs: 3)
+    │
+    ↓ (comp: +0.00%, contam: -0.38%, contigs: +6)
+    ├── hifiasm (Comp: 100.00% | Contam: 3.96% | Contigs: 7)
+    │
+    ↓ (comp: +0.00%, contam: -0.68%, contigs: +1)
+    ├── myloasm (Comp: 100.00% | Contam: 3.66% | Contigs: 2)
+    │
+    ↓ (comp: +0.00%, contam: -0.19%, contigs: +7)
+    ├── longstitch (Comp: 100.00% | Contam: 4.15% | Contigs: 8)
+    │
+    ↓ (comp: +0.00%, contam: -0.34%, contigs: +0)
+    └── medaka_rd1 (Comp: 100.00% | Contam: 4.00% | Contigs: 1)
+        │
+        ↓ (comp: -3.46%, contam: -0.83%, contigs: +0)
+        ├── proovframe (Comp: 96.54% | Contam: 3.17% | Contigs: 1)
+        │
+        ↓ (comp: +0.00%, contam: +0.00%, contigs: +0)
+        └── medaka_rd2 (Comp: 100.00% | Contam: 4.00% | Contigs: 1)
+C3E3_P_semibin.56 
+d__Archaea;p__Asgardarchaeota;c__Jordarchaeia;o__Jordarchaeales;f__Jordarchaeaceae;g__Jordarchaeum;s__
+└── C3E3_P_semibin.56 (Comp: 91.87% | Contam: 2.88% | Contigs: 1)
+    │
+    ↓ (comp: +1.80%, contam: +1.30%, contigs: +25)
+    ├── flye (Comp: 93.67% | Contam: 4.18% | Contigs: 26)
+    │
+    ↓ (comp: +2.65%, contam: +5.62%, contigs: +52)
+    ├── hifiasm (Comp: 94.52% | Contam: 8.50% | Contigs: 53)
+    │
+    ↓ (comp: -1.31%, contam: +1.60%, contigs: +10)
+    ├── myloasm (Comp: 90.56% | Contam: 4.48% | Contigs: 11)
+    │
+    ↓ (comp: +0.37%, contam: -0.08%, contigs: +16)
+    ├── longstitch (Comp: 92.24% | Contam: 2.80% | Contigs: 17)
+    │
+    ↓ (comp: +3.15%, contam: +1.66%, contigs: +0)
+    └── medaka_rd1 (Comp: 95.02% | Contam: 4.54% | Contigs: 1)
+        │
+        ↓ (comp: -1.78%, contam: -1.71%, contigs: +0)
+        ├── proovframe (Comp: 93.24% | Contam: 2.83% | Contigs: 1)
+        │
+        ↓ (comp: -0.30%, contam: +0.00%, contigs: +0)
+        └── medaka_rd2 (Comp: 94.72% | Contam: 4.54% | Contigs: 1)
+C2E1_P_semibin.94 
+d__Archaea;p__Asgardarchaeota;c__Njordarchaeia;o__Njordarchaeales;f__Njordarchaeaceae;g__Njordarchaeum;s__
+└── C2E1_P_semibin.94 (Comp: 87.67% | Contam: 8.83% | Contigs: 1)
+    │
+    ↓ (comp: +12.33%, contam: +1.01%, contigs: +23)
+    ├── flye (Comp: 100.00% | Contam: 9.84% | Contigs: 24)
+    │
+    ↓ (comp: +8.56%, contam: +5.63%, contigs: +39)
+    ├── hifiasm (Comp: 96.23% | Contam: 14.46% | Contigs: 40)
+    │
+    ↓ (comp: +11.54%, contam: +1.31%, contigs: +13)
+    ├── myloasm (Comp: 99.21% | Contam: 10.14% | Contigs: 14)
+    │
+    ↓ (comp: +3.55%, contam: +1.02%, contigs: +51)
+    ├── longstitch (Comp: 91.22% | Contam: 9.85% | Contigs: 52)
+    │
+    ↓ (comp: +12.33%, contam: +0.10%, contigs: +0)
+    └── medaka_rd1 (Comp: 100.00% | Contam: 8.93% | Contigs: 1)
+        │
+        ↓ (comp: -2.89%, contam: +0.68%, contigs: +0)
+        ├── proovframe (Comp: 97.11% | Contam: 9.61% | Contigs: 1)
+        │
+        ↓ (comp: +0.00%, contam: +0.38%, contigs: +0)
+        └── medaka_rd2 (Comp: 100.00% | Contam: 9.31% | Contigs: 1)

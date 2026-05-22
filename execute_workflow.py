@@ -149,6 +149,7 @@ def run_workflow(mags_to_process: list[str],
             "sbatch --cpus-per-task={threads} "
             "--output={cluster.output} --error={cluster.error} "
             "--job-name={cluster.jobname} {cluster.etc}",
+            "--latency-wait", "5",
             "--rerun-incomplete",
         ] + extra_snakemake_args
 

@@ -29,6 +29,12 @@ temp_path       = config["temp_path"]
 samples_dorado  = config["dorado7"]
 samples_list    = sorted(list(samples_dorado.keys()))
 
+samples_genemind = config['extra_short_reads']
+# print(samples_genemind)
+sr_samples_list = sorted(list(samples_genemind.keys()))
+# print(sr_samples_list)
+# sys.exit(1)
+
 uniref_db       = config["uniref_db"]
 checkm1_db      = config["checkm1_db"]
 checkm2_db      = config["checkm2_db"]
@@ -49,6 +55,7 @@ include: "rules/coverm.smk"
 include: "rules/ntlink.smk"
 include: "rules/medaka.smk"
 include: "rules/checkm2.smk"
+include: "rules/racon.smk"
 
 wildcard_constraints:
     mag="[a-zA-Z0-9_\.]+"
@@ -59,6 +66,7 @@ rule all:
         expand(rules.hifiasm_fq.output.assem, mag=mags),
         expand(rules.myloasm_fq.output.assem, mag=mags),
         expand(rules.longstitch.output, mag=mags),
+        expand(rules.racon.output, mag=mags),
         expand(rules.checkm2_original.output.report, mag=mags),
         expand(rules.checkm2_flye_fq.output.report, mag=mags),
         expand(rules.checkm2_hifiasm_fq.output.report, mag=mags),

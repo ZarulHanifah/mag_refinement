@@ -41,7 +41,7 @@ rule longstitch:
     threads: 4
     shell:
         """
-        outdir=$(dirname {output.mag})
+        outdir=$(dirname {output.assem})
         out_prefix=$outdir"/"{wildcards.mag}
         tmp_dir=$(dirname $outdir)"/parking/"{wildcards.mag}
 
@@ -60,7 +60,7 @@ rule longstitch:
          G={params.gsize} \
          t={threads}  &> {log}
 
-        cp $(find $tmp_dir -type f | grep abyss-scaffold.fa) {output.mag}
+        cp $(find $tmp_dir -type f | grep abyss-scaffold.fa) {output.assem}
         mkdir -p {output.supp}
         cp $(find $tmp_dir -type f | grep tigmint | grep -v "fa$") {output.supp}
 

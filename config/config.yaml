@@ -30,6 +30,16 @@ dereplicated_genome_path:
     input_folder/dereplicated_genomes/{mag}.fasta
 pident: 95
 coverage: 80
+extra_short_reads:
+  C001_E5:
+    fwd: /fs04/ie79/Zarul/geneMind/C1E5_R1.fq.gz
+    rvs: /fs04/ie79/Zarul/geneMind/C1E5_R2.fq.gz
+  C002_E1:
+    fwd: /fs04/ie79/Zarul/geneMind/C2E1_R1.fq.gz
+    rvs: /fs04/ie79/Zarul/geneMind/C2E1_R2.fq.gz
+  C003_E3:
+    fwd: /fs04/ie79/Zarul/geneMind/C3E3_R1.fq.gz
+    rvs: /fs04/ie79/Zarul/geneMind/C3E3_R2.fq.gz
 dorado7:
   C001_A3:
     input_folder/dorado7/C001_A3/

@@ -40,11 +40,22 @@ for mag_name in mag_names:
         )
         childF1.name = assem
 
+    # racon
+    assem = "racon"
+    medaka_rd1 = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/{assem}/{mag_name}.fasta"),
+      Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv"),
+      root,
+    )
+    medaka_rd1.name = "racon"
+
     # medaka rd1
     assem = "medaka"
     medaka_rd1 = RefinedMag.from_checkm2qual(
       mag_name,
-      Path(f"results/{assem}/{mag_name}/{mag_name}.{assem}.fasta"),
+      Path(f"results/{assem}/{mag_name}.fasta"),
+      # Path(f"results/{assem}/{mag_name}/{mag_name}.{assem}.fasta"),
       Path(f"results/checkm2/{assem}/{mag_name}/quality_report.tsv"),
       root,
     )

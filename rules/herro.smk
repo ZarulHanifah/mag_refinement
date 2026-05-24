@@ -13,13 +13,15 @@ def get_osample_input_directory(wildcards):
     return samples_dorado[wildcards.osample]
 
 checkpoint chunk_osample:
+    input:
+        input_folder = get_osample_input_directory
     output: os.path.join(results_path, "minimap2/chunking/{osample}.map")
     threads: 1
-    params:
-        input_folder = get_osample_input_directory,
+    # params:
+    #     input_folder = get_osample_input_directory,
     shell:
         """ 
-        python src/chunking_fastq.py -i {params.input_folder} | sed "s/^chunk/{wildcards.osample}_chunk/" > {output}
+        python src/chunking_fastq.py -i {input.input_folder} | sed "s/^chunk/{wildcards.osample}_chunk/" > {output}
         """ 
 
 def output_fastq_chunk_osample(wildcards):

@@ -1,6 +1,17 @@
+rule minimap2_index_racon:
+    input: ancient(config["dereplicated_genome_path"])
+    output: temp(os.path.join(temp_path, "racon/minimap2_index/{mag}/{mag}.mmi"))
+    log: os.path.join(results_path, "log/racon/minimap2_index/{mag}.log")
+    threads: 8
+    shell:
+        """ 
+        module load minimap2/2.28
+        minimap2 -t {threads} -x map-ont -d {output} {input}
+        """ 
+
 rule align_short_read_per_sample:
     input:
-        idx = rules.minimap2_index.output,
+        idx = rules.minimap2_index_racon.output,
         fwd = lambda wildcards: config['extra_short_reads'][wildcards.sr_sample]['fwd'],
         rvs = lambda wildcards: config['extra_short_reads'][wildcards.sr_sample]['rvs'],
     output:

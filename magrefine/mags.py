@@ -17,6 +17,7 @@ class BaseMag(ABC):
     Abstract Base Class for a Metagenome-Assembled Genome (MAG).
     Provides common trajectory, metadata parsing, and relationship logic.
     """
+
     name: str
     _fp: Path
     contigids: Sequence[BaseContigID]
@@ -41,103 +42,8 @@ class BaseMag(ABC):
         return {
             "completeness_diff": round(self.completeness - other.completeness, 2),
             "contamination_diff": round(self.contamination - other.contamination, 2),
-            "total_contigs_diff": round(self.total_contigs - other.total_contigs, 2)
+            "total_contigs_diff": round(self.total_contigs - other.total_contigs, 2),
         }
-
-    @property
-    def children(self) -> list[BaseMag]:
-        if not hasattr(self, "_children"):
-            self._children = []
-        return self._children
-
-    def add_child(self, child: BaseMag):
-        self.children.append(child)
-
-    def tree_report(self) -> str:
-        """
-        Generates a top-down tree showing this MAG and all its descendant derivations.
-        """
-        lines = []
-        straight_down = "│"
-
-        def recurse(mag: BaseMag, prefix: str, is_last: bool):
-            comp, contam, contigs = mag.completeness, mag.contamination, mag.total_contigs
-
-            if not prefix:
-                lines.append(f"└── {mag.name} (Comp: {comp:.2f}% | Contam: {contam:.2f}% | Contigs: {contigs})")
-                child_prefix = "    "
-            else:
-                branch = "└──" if is_last else "├──"
-                lines.append(f"{prefix}{branch} {mag.name} (Comp: {comp:.2f}% | Contam: {contam:.2f}% | Contigs: {contigs})")
-                child_prefix = prefix + ("    " if is_last else "│   ")
-
-            for idx, child in enumerate(mag.children):
-                child_is_last = (idx == len(mag.children) - 1)
-
-                diffs = child.compare_to(mag)
-                comp_diff = diffs["completeness_diff"]
-                contam_diff = diffs["contamination_diff"]
-                contigs_diff = diffs["total_contigs_diff"]
-
-                comp_color = "green" if comp_diff > 0 else ("red" if comp_diff < 0 else "white")
-                contam_color = "red" if contam_diff > 0 else ("green" if contam_diff < 0 else "white")
-                contigs_color = "red" if contigs_diff > 0 else ("green" if contigs_diff < 0 else "white")
-
-                comp_str = f"[{comp_color}]{comp_diff:+.2f}%[/{comp_color}]"
-                contam_str = f"[{contam_color}]{contam_diff:+.2f}%[/{contam_color}]"
-                contigs_str = f"[{contigs_color}]{contigs_diff:+d}[/{contigs_color}]"
-
-                lines.append(f"{child_prefix}{straight_down}")
-                lines.append(f"{child_prefix}↓ (comp: {comp_str}, contam: {contam_str}, contigs: {contigs_str})")
-                recurse(child, child_prefix, child_is_last)
-
-        recurse(self, "", True)
-        return "\n".join(lines)
-
-    def lineage_report(self) -> str:
-        """
-        Generates a tree-like string showing the history of improvements 
-        from the original root MAG to this current MAG.
-        """
-        chain = []
-        current = self
-        while current is not None:
-            chain.append(current)
-            current = getattr(current, "parent", None)
-
-        chain.reverse()
-
-        lines = []
-        for i, mag in enumerate(chain):
-            indent = "    " * i
-
-            comp = mag.completeness
-            contam = mag.contamination
-            contigs = mag.total_contigs
-            mag_str = f"{indent}└── {mag.name} (Comp: {comp:.2f}% | Contam: {contam:.2f}% | Contigs: {contigs})"
-
-            if i > 0:
-                prev_mag = chain[i - 1]
-                diffs = mag.compare_to(prev_mag)
-                comp_diff = diffs["completeness_diff"]
-                contam_diff = diffs["contamination_diff"]
-                contigs_diff = diffs["total_contigs_diff"]
-
-                comp_color = "green" if comp_diff > 0 else ("red" if comp_diff < 0 else "white")
-                contam_color = "red" if contam_diff > 0 else ("green" if contam_diff < 0 else "white")
-                contigs_color = "red" if contigs_diff > 0 else ("green" if contigs_diff < 0 else "white")
-
-                comp_str = f"[{comp_color}]{comp_diff:+.2f}%[/{comp_color}]"
-                contam_str = f"[{contam_color}]{contam_diff:+.2f}%[/{contam_color}]"
-                contigs_str = f"[{contigs_color}]{contigs_diff:+d}[/{contigs_color}]"
-
-                arrow_indent = "    " * i
-                delta_str = f"{arrow_indent}↓ (comp: {comp_str}, contam: {contam_str}, contigs: {contigs_str})"
-                lines.append(delta_str)
-
-            lines.append(mag_str)
-
-        return "\n".join(lines)
 
 
 @dataclass
@@ -145,6 +51,7 @@ class Mag(BaseMag):
     """
     Original MAG representation, capturing summary metrics explicitly.
     """
+
     name: str
     _fp: Path
     contigids: Sequence[BaseContigID]
@@ -165,7 +72,9 @@ class Mag(BaseMag):
     _has_5s: bool = False
 
     @classmethod
-    def from_summary_data(cls, name: str, data: dict, fp: Path, contigids: Sequence[BaseContigID]) -> "Mag":
+    def from_summary_data(
+        cls, name: str, data: dict, fp: Path, contigids: Sequence[BaseContigID]
+    ) -> "Mag":
         """
         Alternate constructor to instantiate a Mag directly from a CheckM summary dictionary.
         """
@@ -173,25 +82,30 @@ class Mag(BaseMag):
             name=name,
             _fp=fp,
             contigids=contigids,
-            completeness=float(data['Completeness']),
-            contamination=float(data['Contamination']),
-            total_contigs=int(data['Total_Contigs']),
-            contig_n50=data['Contig_N50'],
-            gc_content=float(data['GC_Content']),
-            max_contig_length=data['Max_Contig_Length'],
-            genome_size=data['genome_size'],
-            average_coverage=float(data.get('average_coverage', 0.0)),
-            trna_counts=data.get('tRNA counts', 0),
-            classification=data.get('classification', ''),
-            red_value=data.get('red_value', 0.0),
-            _has_16s=bool(data.get('16S_rRNA', False)),
-            _has_23s=bool(data.get('23S_rRNA', False)),
-            _has_5s=bool(data.get('5S_rRNA', False))
+            completeness=float(data["Completeness"]),
+            contamination=float(data["Contamination"]),
+            total_contigs=int(data["Total_Contigs"]),
+            contig_n50=data["Contig_N50"],
+            gc_content=float(data["GC_Content"]),
+            max_contig_length=data["Max_Contig_Length"],
+            genome_size=data["genome_size"],
+            average_coverage=float(data.get("average_coverage", 0.0)),
+            trna_counts=data.get("tRNA counts", 0),
+            classification=data.get("classification", ""),
+            red_value=data.get("red_value", 0.0),
+            _has_16s=bool(data.get("16S_rRNA", False)),
+            _has_23s=bool(data.get("23S_rRNA", False)),
+            _has_5s=bool(data.get("5S_rRNA", False)),
         )
 
-    def has_16s_rrna(self): return self._has_16s
-    def has_23s_rrna(self): return self._has_23s
-    def has_5s_rrna(self):  return self._has_5s
+    def has_16s_rrna(self):
+        return self._has_16s
+
+    def has_23s_rrna(self):
+        return self._has_23s
+
+    def has_5s_rrna(self):
+        return self._has_5s
 
     @property
     def fp(self) -> str:
@@ -211,9 +125,11 @@ class Mag(BaseMag):
 
     @property
     def assembler(self) -> str:
-        return { "A": "myloasm", "M": "medaka", "P": "proovframe" }[self.name.split("_")[1]]
+        return {"A": "myloasm", "M": "medaka", "P": "proovframe"}[
+            self.name.split("_")[1]
+        ]
 
-    def __repr__(self): 
+    def __repr__(self):
         return (
             f"{self.__class__.__name__}"
             f"(name={self.name}, "
@@ -229,7 +145,7 @@ class Mag(BaseMag):
         """
         Generates a pandas DataFrame of contig depths for all samples.
         """
-        depths = [ contigid.get_abund_info() for contigid in self.contigids ]
+        depths = [contigid.get_abund_info() for contigid in self.contigids]
         indices = [contigid.name for contigid in self.contigids]
         return pd.DataFrame(depths, index=pd.Index(indices))
 
@@ -246,20 +162,28 @@ class Mag(BaseMag):
             length = c.length or 0  # Fallback gracefully
             total_bases += c.depth_from_all_samples * length
             total_length += length
-        if total_length == 0: return 0.0
+        if total_length == 0:
+            return 0.0
         return total_bases / total_length
 
-    def average_coverage_per_sample(self, samplename: Optional[str] = None ) -> float:
+    def average_coverage_per_sample(self, samplename: Optional[str] = None) -> float:
         if samplename == None:
             samplename = self.long_sample
-        values = [ (contigid.name, contigid.length or 0, self.get_depth_per_contig(contigid, samplename) )
-                  for contigid in self.contigids ]
+        values = [
+            (
+                contigid.name,
+                contigid.length or 0,
+                self.get_depth_per_contig(contigid, samplename),
+            )
+            for contigid in self.contigids
+        ]
         total_bases = 0
         for v in values:
             total_bases += v[1] * v[2]
 
         total_len = sum([v[1] for v in values])
-        if total_len == 0: return 0.0
+        if total_len == 0:
+            return 0.0
         return total_bases / total_len
 
 
@@ -268,32 +192,22 @@ class RefinedMag(BaseMag):
     """
     A MAG generated via refinement operations (e.g. scaffolding) whose metrics are explicitly given.
     """
+
     name: str
     _fp: Path
     contigids: Sequence[BaseContigID]
     completeness: float
     contamination: float
-    parent: Optional[BaseMag] = None
     total_contigs: int = field(init=False)
 
     def __post_init__(self):
         self.total_contigs = len(self.contigids)
-        if self.parent is not None:
-            self.parent.add_child(self)
-
-    def improvement_report(self) -> dict[str, float] | None:
-        """
-        Returns stats relative to the parent MAG, if a parent was assigned.
-        """
-        if self.parent is None:
-            return None
-        return self.compare_to(self.parent)
 
     @staticmethod
     def read_checkm2_df(mag_name, checkmqual: Path):
         df = pd.read_csv(checkmqual, sep="\t", index_col=0)
         df = df.loc[[mag_name], :]
-        df_dict =  df.to_dict(orient="index")
+        df_dict = df.to_dict(orient="index")
         return df_dict[mag_name]
 
     @staticmethod
@@ -315,7 +229,7 @@ class RefinedMag(BaseMag):
             "Longest contig": "Max_Contig_Length",
         }
 
-        return { rename_val_keys[k]: val[k] for k in rename_val_keys.keys() }
+        return {rename_val_keys[k]: val[k] for k in rename_val_keys.keys()}
 
     @staticmethod
     def extract_header_from_fasta_file(fasta_file: Path) -> Generator[str, Any, Any]:
@@ -339,7 +253,7 @@ class RefinedMag(BaseMag):
         target = folder / "storage" / "bin_stats_ext.tsv"
         if target.is_file():
             return target
-        
+
         # Fallback search
         for root, _, files in os.walk(folder):
             if "bin_stats_ext.tsv" in files:
@@ -354,7 +268,7 @@ class RefinedMag(BaseMag):
         target = folder / "quality_report.tsv"
         if target.is_file():
             return target
-        
+
         # Fallback search
         for root, _, files in os.walk(folder):
             if "quality_report.tsv" in files:
@@ -362,20 +276,22 @@ class RefinedMag(BaseMag):
         return None
 
     @classmethod
-    def from_checkm2qual(cls,
-                        mag_name: str,
-                        _fp: Path,
-                        checkmqual: Path | str,    # can be the quality_report.tsv or even the folder containing the file
-                        parent: Optional[BaseMag] = None) -> RefinedMag:
+    def from_checkm2qual(
+        cls, mag_name: str, _fp: Path, checkmqual: Path | str
+    ) -> RefinedMag:
         checkmqual = Path(checkmqual)
         if checkmqual.is_file():
             _checkmqual = checkmqual
         elif checkmqual.is_dir():
             _checkmqual = cls.get_checkm2qualfile(checkmqual)
             if _checkmqual is None:
-                raise FileNotFoundError(f"Could not find quality_report.tsv in {checkmqual}")
+                raise FileNotFoundError(
+                    f"Could not find quality_report.tsv in {checkmqual}"
+                )
         else:
-            raise FileNotFoundError(f"CheckM2 quality path does not exist: {checkmqual}")
+            raise FileNotFoundError(
+                f"CheckM2 quality path does not exist: {checkmqual}"
+            )
 
         checkm_dict = cls.read_checkm2_df(mag_name, _checkmqual)
         # how checkm_dict looks like:
@@ -388,24 +304,25 @@ class RefinedMag(BaseMag):
             contigids,
             checkm_dict["Completeness"],
             checkm_dict["Contamination"],
-            parent
         )
 
     @classmethod
-    def from_checkm1qual(cls,
-                        mag_name: str,
-                        _fp: Path,
-                        checkmqual: Path | str,    # can be the quality_report.tsv or even the folder containing the file
-                        parent: Optional[BaseMag] = None) -> RefinedMag:
+    def from_checkm1qual(
+        cls, mag_name: str, _fp: Path, checkmqual: Path | str
+    ) -> RefinedMag:
         checkmqual = Path(checkmqual)
         if checkmqual.is_file():
             _checkmqual = checkmqual
         elif checkmqual.is_dir():
             _checkmqual = cls.get_checkm1qualfile(checkmqual)
             if _checkmqual is None:
-                raise FileNotFoundError(f"Could not find bin_stats_ext.tsv in {checkmqual}")
+                raise FileNotFoundError(
+                    f"Could not find bin_stats_ext.tsv in {checkmqual}"
+                )
         else:
-            raise FileNotFoundError(f"CheckM1 quality path does not exist: {checkmqual}")
+            raise FileNotFoundError(
+                f"CheckM1 quality path does not exist: {checkmqual}"
+            )
 
         checkm_dict = cls.read_checkm1_tsv(mag_name, _checkmqual)
         contigids = RefinedMag.get_mylocontigid_from_fasta_file(_fp)
@@ -415,10 +332,9 @@ class RefinedMag(BaseMag):
             contigids,
             checkm_dict["Completeness"],
             checkm_dict["Contamination"],
-            parent
         )
 
-    def __repr__(self): 
+    def __repr__(self):
         return (
             f"{self.__class__.__name__}"
             f"(name={self.name}, "

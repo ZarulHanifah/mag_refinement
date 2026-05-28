@@ -11,7 +11,7 @@ from magrefine.mags import BaseMag
 class Metric:
     attribute: str  # attr name of BaseMag instance
     label: str  # text displayed in reports
-    diff_key: str  # key inside chil.compare_to(parent)
+    diff_key: str  # key inside child.compare_to(parent)
     fmt: str = ".2f%"
     higher_is_better: bool = True
 

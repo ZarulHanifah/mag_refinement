@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 
 from magrefine.mags import Mag, RefinedMag
-from magrefine.graph import RefinementGraph
+from magrefine.graph import RefinementGraph, Metric
 from magrefine.sessionmanager import SessionManager
 
 from rich import print
@@ -18,11 +18,17 @@ sesh = SessionManager(
     abund_dir=Path(abund_dir_path)
 )
 
+METRICS = [
+    Metric(attribute="completeness", label="Comp", diff_key="completeness_diff", fmt=".2f%", higher_is_better=True),
+    Metric(attribute="contamination", label="Contam", diff_key="contamination_diff", fmt=".2f%", higher_is_better=False),
+    Metric(attribute="total_contigs", label="Contigs", diff_key="total_contigs_diff", fmt="d", higher_is_better=False),
+    Metric(attribute="average_coverage", label="AvgCov", diff_key="avg_cov_diff", fmt=".2f", higher_is_better=True),
+]
 # mag_name = "C1E5_M_metabat.1297"
 mag_names = os.listdir("results/flye/")
 
 for mag_name in mag_names:
-    graph = RefinementGraph()
+    graph = RefinementGraph(METRICS)
     root = sesh.get_mag(mag_name)
     graph.add_mag(root)
 
@@ -42,6 +48,16 @@ for mag_name in mag_names:
         )
         childF1.name = assem
         graph.add_derivation(parent=root, child=childF1)
+
+    # pilon_original
+    assem = "pilon_original"
+    pilon_original_polish = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/pilon/original/{mag_name}/{mag_name}.fasta"),
+      Path(f"results/checkm2/pilon_original/{mag_name}/quality_report.tsv")
+    )
+    pilon_original_polish.name = "pilon_original"
+    graph.add_derivation(parent=root, child=pilon_original_polish)
 
     # racon
     assem = "racon"
@@ -63,6 +79,16 @@ for mag_name in mag_names:
     medaka_rd1.name = "medaka_rd1"
     graph.add_derivation(parent=root, child=medaka_rd1)
 
+    # pilon_medaka
+    assem = "pilon_medaka"
+    pilon_medaka_polish = RefinedMag.from_checkm2qual(
+      mag_name,
+      Path(f"results/pilon/medaka/{mag_name}/{mag_name}.fasta"),
+      Path(f"results/checkm2/pilon_medaka/{mag_name}/quality_report.tsv")
+    )
+    pilon_medaka_polish.name = "pilon_medaka"
+    graph.add_derivation(parent=medaka_rd1, child=pilon_medaka_polish)
+
     # medaka rd1 --> proovframe
     assem = "proovframe"
     proovframe = RefinedMag.from_checkm2qual(
@@ -83,6 +109,7 @@ for mag_name in mag_names:
     medaka_rd2.name = "medaka_rd2"
     graph.add_derivation(parent=medaka_rd1, child=medaka_rd2)
 
-    # print(mag_name, root.classification)
-    print(mag_name)
+    print(mag_name, root.classification)
+    # print(mag_name)
     print(graph.tree_report(root))
+    print()

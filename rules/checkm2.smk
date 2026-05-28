@@ -222,9 +222,65 @@ rule checkm2_racon:
          --output-directory $outfolder &> {log}
         """
 
+rule checkm2_pilon_original:
+    input:
+        mag = rules.pilon_original.output.assem,
+        db = checkm2_db
+    output:
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/pilon_original/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/pilon_original/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/pilon_original/{mag}/quality_report.tsv")
+    conda: "checkm2_"
+    threads: 2
+    log: os.path.join(results_path, "log/checkm2/pilon_original/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: pilon_original"
+    shell:
+        """
+        cp {input.mag} {output.tmp}
+        input_genome=$(find {output.tmp} | grep "fasta")
+
+        outfolder=$(dirname {output.report})
+
+        checkm2 predict --force \
+         --threads {threads} \
+         --input $input_genome \
+         --database_path {input.db} \
+         --output-directory $outfolder &> {log}
+        """
+
+rule checkm2_pilon_medaka:
+    input:
+        mag = rules.pilon_medaka.output.assem,
+        db = checkm2_db
+    output:
+        remove_list = temp([
+            directory(os.path.join(results_path, "checkm2/pilon_medaka/{mag}/protein_files/"))
+        ]),
+        tmp = temp(os.path.join(results_path, ".tmp/checkm2/pilon_medaka/{mag}/{mag}.fasta")),
+        report = os.path.join(results_path, "checkm2/pilon_medaka/{mag}/quality_report.tsv")
+    conda: "checkm2_"
+    threads: 2
+    log: os.path.join(results_path, "log/checkm2/pilon_medaka/{mag}.log")
+    message: "Running checkm2 for genome {wildcards.mag}: pilon_medaka"
+    shell:
+        """
+        cp {input.mag} {output.tmp}
+        input_genome=$(find {output.tmp} | grep "fasta")
+
+        outfolder=$(dirname {output.report})
+
+        checkm2 predict --force \
+         --threads {threads} \
+         --input $input_genome \
+         --database_path {input.db} \
+         --output-directory $outfolder &> {log}
+        """
+
 rule checkm2_medaka_rd2:
     input:
-        mag = ancient(rules.medaka_rd2.output.assem),
+        mag = rules.medaka_rd2.output.assem,
         db = ancient(checkm2_db)
     output:
         remove_list = temp([

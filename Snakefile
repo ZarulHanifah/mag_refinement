@@ -54,7 +54,9 @@ include: "rules/assembly.smk"
 include: "rules/coverm.smk"
 include: "rules/ntlink.smk"
 include: "rules/medaka.smk"
-include: "rules/racon.smk"
+include: "rules/racon_original.smk"
+include: "rules/pilon_original.smk"
+include: "rules/pilon_medaka.smk"
 include: "rules/checkm2.smk"
 
 wildcard_constraints:
@@ -67,6 +69,8 @@ rule all:
         expand(rules.myloasm_fq.output.assem, mag=mags),
         expand(rules.longstitch.output, mag=mags),
         expand(rules.racon.output.assem, mag=mags),
+        expand(rules.pilon_original.output.assem, mag=mags),
+        expand(rules.pilon_medaka.output.assem, mag=mags),
         expand(rules.checkm2_original.output.report, mag=mags),
         expand(rules.checkm2_flye_fq.output.report, mag=mags),
         expand(rules.checkm2_hifiasm_fq.output.report, mag=mags),
@@ -75,6 +79,8 @@ rule all:
         expand(rules.checkm2_medaka.output.report, mag=mags),
         expand(rules.checkm2_proovframe.output.report, mag=mags),
         expand(rules.checkm2_racon.output.report, mag=mags),
+        expand(rules.checkm2_pilon_original.output.report, mag=mags),
+        expand(rules.checkm2_pilon_medaka.output.report, mag=mags),
         expand(rules.checkm2_medaka_rd2.output.report, mag=mags),
         expand(rules.checkm1_original.output.report, mag=mags),
 

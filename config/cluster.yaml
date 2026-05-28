@@ -26,3 +26,9 @@ hifiasm_fq:
 checkm_original:
   threads : 2
   etc     : " --mem=40G "
+pilon_original:
+  threads : 4
+  etc     : " --mem=60G "
+pilon_medaka:
+  threads : 4
+  etc     : " --mem=60G "

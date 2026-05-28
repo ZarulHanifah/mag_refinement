@@ -17,8 +17,10 @@ rule align_short_read_per_sample:
     output:
         bam = temp(os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}.bam')),
         bai = temp(os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}.bam.bai')),
+        flagstat = os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}.flagstat.txt'),
         fq1 = temp(os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}_R1.fastq.gz')),
         fq2 = temp(os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}_R2.fastq.gz')),
+        fqu = temp(os.path.join(temp_path, 'racon/sr_alignment/{mag}/{sr_sample}_unpaired.fastq.gz')),
     log:
         os.path.join(results_path, 'log/racon/align_short_read_per_sample/{mag}__{sr_sample}.log')
     threads: 4
@@ -35,8 +37,9 @@ rule align_short_read_per_sample:
          samtools view -@ {threads} -h -F 4 - | \
          samtools sort -@ {threads} -T $tmpdir -o {output.bam} - 2>> {log}
         samtools index {output.bam}
+        samtools flagstat {output.bam} > {output.flagstat}
 
-        samtools fastq -@ {threads} -1 {output.fq1} -2 {output.fq2} -0 /dev/null -s /dev/null {output.bam} 2>> {log}
+        samtools fastq -@ {threads} -1 {output.fq1} -2 {output.fq2} -0 {output.fqu} -s /dev/null {output.bam} 2>> {log}
 
         rm -rf $tmpdir
         '''
@@ -46,27 +49,29 @@ rule merge_sr_alignment:
         bams = lambda wildcards: expand(rules.align_short_read_per_sample.output.bam, mag=wildcards.mag, sr_sample=sr_samples_list),
         bais = lambda wildcards: expand(rules.align_short_read_per_sample.output.bai, mag=wildcards.mag, sr_sample=sr_samples_list)
     output:
-        temp(os.path.join(temp_path, 'racon/merged_alignment/{mag}.sam'))
+        sam = temp(os.path.join(temp_path, 'racon/merged_alignment/{mag}.sam')),
+        flagstat = os.path.join(temp_path, 'racon/merged_alignment/{mag}.flagstat.txt'),
     threads: 4
     shell:
         '''
         module load minimap2/2.28
         module load samtools/1.19.3
-        samtools merge -@ {threads} -O SAM {output} {input.bams}
+        samtools merge -@ {threads} -O SAM {output.sam} {input.bams}
+        samtools flagstat {output.sam} > {output.flagstat}
         '''
 
 rule racon:
     input:
         mag = ancient(config["dereplicated_genome_path"]),
-        sam = rules.merge_sr_alignment.output,
+        sam = rules.merge_sr_alignment.output.sam,
         fq1 = lambda wildcards: expand(rules.align_short_read_per_sample.output.fq1, mag=wildcards.mag, sr_sample=sr_samples_list),
         fq2 = lambda wildcards: expand(rules.align_short_read_per_sample.output.fq2, mag=wildcards.mag, sr_sample=sr_samples_list)
     output:
         fq = temp(os.path.join(temp_path, 'racon/merged_alignment/{mag}.fastq.gz')),
         assem = os.path.join(results_path, 'racon/{mag}.fasta')
-    threads: 8
     log:
         os.path.join(results_path, 'log/racon/racon/{mag}.log')
+    threads: 8
     shell:
         '''
         module load racon/1.5.0
@@ -78,3 +83,4 @@ rule racon:
          {input.sam} \
          {input.mag} > {output.assem} 2> {log}
         '''
+
